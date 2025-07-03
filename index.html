@@ -1694,7 +1694,27 @@ Country"></textarea>
             }
 
             grid.innerHTML = plants.map(plant => createPlantCard(plant)).join('');
-            setupCartButtons();
+            
+            // Add event listeners for add to cart buttons
+            grid.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    try {
+                        if (this.disabled) return;
+                        
+                        const plantId = this.dataset.plantId;
+                        const plantName = this.dataset.plantName;
+                        const size = this.dataset.size;
+                        const price = parseFloat(this.dataset.price);
+                        const sizeIndex = parseInt(this.dataset.sizeIndex);
+                        
+                        console.log('Adding to cart:', {plantId, plantName, size, price, sizeIndex});
+                        addToCart(plantId, plantName, size, price, sizeIndex);
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        alert('Error adding item to cart. Please try again.');
+                    }
+                });
+            });
         }
 
         function loadCategoryData(category) {
