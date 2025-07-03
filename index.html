@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mike Wang's Sarracenia - Premium Carnivorous Plants</title>
+    
+    <!-- Simple Password Protection -->
+    <script>
+        // Check if user is already authenticated this session
+        if (sessionStorage.getItem('mikeAuthToken') !== 'authenticated') {
+            // Show password prompt
+            const password = prompt('🌿 Enter password to access Mike\'s private plant collection:');
+            
+            if (password === 'sarracenia2025') {
+                // Correct password - grant access
+                sessionStorage.setItem('mikeAuthToken', 'authenticated');
+                console.log('Access granted to Mike\'s plant shop!');
+            } else if (password === null) {
+                // User clicked cancel
+                document.write('<div style="font-family: Georgia, serif; text-align: center; padding: 50px; color: #2c3e2d;"><h1>🌿 Mike Wang\'s Sarracenia Collection</h1><p>Access cancelled. <a href="#" onclick="location.reload()">Try again</a></p></div>');
+                throw new Error('Access cancelled');
+            } else {
+                // Wrong password
+                document.write('<div style="font-family: Georgia, serif; text-align: center; padding: 50px; color: #2c3e2d;"><h1>🚫 Access Denied</h1><p>Incorrect password. <a href="#" onclick="location.reload()">Try again</a></p><p style="color: #999; font-size: 0.9rem; margin-top: 20px;">Hint: Think carnivorous plants + current year 😉</p></div>');
+                throw new Error('Authentication failed');
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2c3e2d;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(44, 62, 45, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #7cb342;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .logo::before {
+            content: "🌿";
+            font-size: 2.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #e8f5e8;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            color: #7cb342;
+            background: rgba(124, 179, 66, 0.1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .cart-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .contact-info {
+            font-size: 0.9rem;
+            text-align: right;
+            line-height: 1.4;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                        url('https://live.staticflickr.com/65535/53472378779_cda76e39c0_c.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .announcement {
+            background: rgba(124, 179, 66, 0.9);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .category-card {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+            border-radius: 15px;
+            z-index: 1;
+        }
+
+        .category-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-card:hover::before {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .category-description {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .category-count {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #7cb342;
+        }
+
+        /* About Section */
+        .about {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 3rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .about h2 {
+            color: #2c3e2d;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .about p {
+            margin-bottom: 1.5rem;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .highlight {
+            background: rgba(124, 179, 66, 0.1);
+            padding: 1.5rem;
+            border-left: 4px solid #7cb342;
+            margin: 2rem 0;
+            border-radius: 5px;
+        }
+
+        /* Loading Styles */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 62, 45, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            font-family: Georgia, serif;
+        }
+
+        .loader-content {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid #7cb342;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #7cb342;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e2d;
+        }
+
+        /* Page Section Styles */
+        .page-section {
+            display: none;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Plant Grid */
+        .plant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .plant-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(124, 179, 66, 0.1);
+        }
+
+        .plant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #7cb342;
+        }
+
+        .plant-image {
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #7cb342, #8bc34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plant-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .plant-image.placeholder {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .plant-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
+            z-index: 1;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .status-back-in-stock {
+            background: rgba(34, 197, 94, 0.9);
+            color: white;
+        }
+
+        .status-sold-out {
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+        }
+
+        .status-limited {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+
+        .status-new {
+            background: rgba(147, 51, 234, 0.9);
+            color: white;
+        }
+
+        .status-extinct {
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+        }
+
+        .plant-info {
+            padding: 2rem;
+        }
+
+        .plant-id {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .plant-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e2d;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .plant-location {
+            font-size: 1rem;
+            color: #7cb342;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .plant-description {
+            color: #555;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .plant-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-tag {
+            background: rgba(124, 179, 66, 0.1);
+            color: #7cb342;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .plant-pricing {
+            border-top: 1px solid #eee;
+            padding-top: 1.5rem;
+        }
+
+        .price-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(124, 179, 66, 0.05);
+            border-radius: 8px;
+        }
+
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .add-to-cart-btn {
+            background: #7cb342;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #689f38;
+        }
+
+        .add-to-cart-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Cart Styles */
+        .cart-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-size {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: #7cb342;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .quantity-btn:hover {
+            background: #689f38;
+        }
+
+        .quantity {
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .cart-summary-section {
+            background: rgba(124, 179, 66, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 2px solid #7cb342;
+        }
+
+        .cart-total-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(124, 179, 66, 0.3);
+        }
+
+        .cart-total-line:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #7cb342;
+        }
+
+        .bare-root-acknowledgment {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .acknowledgment-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .acknowledgment-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+        }
+
+        .acknowledgment-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .tax-note {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .checkout-btn {
+            background: #2c3e2d;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover:not(:disabled) {
+            background: #1a2621;
+        }
+
+        .checkout-btn:disabled {
+            background: #ccc;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .continue-shopping {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .continue-shopping:hover {
+            background: #555;
+        }
+
+        .payment-methods-info {
+            background: rgba(124, 179, 66, 0.1);
+            border: 1px solid rgba(124, 179, 66, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-methods-info h4 {
+            color: #2c3e2d;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .payment-methods-info p {
+            margin: 0.5rem 0;
+            color: #2c3e2d;
+        }
+
+        /* Order Form Styles */
+        .order-form-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .order-summary {
+            background: rgba(124, 179, 66, 0.1);
+            border: 1px solid rgba(124, 179, 66, 0.3);
+            border-radius: 10px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .order-summary h3 {
+            color: #2c3e2d;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .order-form {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-form h3 {
+            color: #2c3e2d;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e2d;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #7cb342;
+            box-shadow: 0 0 0 2px rgba(124, 179, 66, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .submit-order-btn {
+            background: #2c3e2d;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .submit-order-btn:hover {
+            background: #1a2621;
+        }
+
+        .back-to-cart-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .back-to-cart-btn:hover {
+            background: #555;
+        }
+
+        .order-item-review {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(124, 179, 66, 0.3);
+        }
+
+        .order-totals-review {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid rgba(124, 179, 66, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .order-form-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1rem;
+            }
+
+            .order-summary {
+                position: static;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .plant-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .cart-item-controls {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Indicator -->
+    <div id="data-loader" class="loader-overlay">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Loading plant inventory from Google Sheets...</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">Please wait while we fetch the latest data</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a class="logo" onclick="navigateTo('home')">Mike Wang's Sarracenia</a>
+                <nav>
+                    <ul>
+                        <li><a onclick="navigateTo('home')" id="nav-home" class="active">Home</a></li>
+                        <li><a onclick="navigateTo('flavas')" id="nav-flavas">Flavas</a></li>
+                        <li><a onclick="navigateTo('leucophyllas')" id="nav-leucophyllas">Leucophyllas</a></li>
+                        <li><a onclick="navigateTo('purpureas')" id="nav-purpureas">Purpureas</a></li>
+                        <li><a onclick="navigateTo('minors')" id="nav-minors">Minors</a></li>
+                        <li><a onclick="navigateTo('hybrids')" id="nav-hybrids">Hybrids</a></li>
+                        <li><a onclick="navigateTo('venus-flytraps')" id="nav-venus-flytraps">Venus Flytraps</a></li>
+                        <li><a onclick="navigateTo('darlingtonia')" id="nav-darlingtonia">Darlingtonia</a></li>
+                        <li><a onclick="navigateTo('companion-plants')" id="nav-companion-plants">Companion Plants</a></li>
+                    </ul>
+                </nav>
+                <div class="header-right">
+                    <div class="cart-icon-container" onclick="showCart()" style="cursor: pointer; margin-right: 2rem;">
+                        <span style="font-size: 1.8rem;">🛒</span>
+                        <span id="cart-count" style="background: #ff4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.8rem; position: absolute; top: -5px; right: -5px; display: none;">0</span>
+                    </div>
+                    <div class="contact-info">
+                        <div>Email: meizzwang@gmail.com</div>
+                        <div>Ships Year-Round • Bare Root</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HOME PAGE -->
+    <section id="home-page" class="page-section active">
+        <div class="hero">
+            <div class="container">
+                <h1>The Largest Selection of Species Sarracenia in the US</h1>
+                <p>Premium carnivorous plants from a dedicated hobbyist directly to collectors and enthusiasts</p>
+                <p class="hero-subtitle">Visit our <a href="https://sarracenia.proboards.com/thread/454/mike-wangs-sarracenia-sale" target="_blank" style="color: #7cb342; text-decoration: none;">Sarracenia Forum discussion</a> for detailed photos and information</p>
+                
+                <div class="announcement">
+                    🌱 WE SHIP ALL YEAR ROUND, ALWAYS OPEN FOR BUSINESS! 🌱<br>
+                    Updated 2025 inventory available • Plants sent bare root • Shipping $11-$40
+                </div>
+            </div>
+        </div>
+
+        <main class="container">
+            <section>
+                <h2 class="section-title">Browse Our Collection</h2>
+                
+                <div class="category-grid" id="home-categories">
+                    <!-- Categories will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <section class="about">
+                <h2>About Mike Wang's Sarracenia</h2>
+                <p>Welcome to the largest selection of species Sarracenia in the United States! I've been growing carnivorous plants as a passionate hobbyist for many years, specializing in rare, extinct-in-the-wild, and exceptional clones with documented location data.</p>
+                
+                <div class="highlight">
+                    <strong>What makes our plants special:</strong> Every plant is carefully grown and divided by me personally. These are not tiny tissue culture specimens, but rather lovingly cultivated plants given time to develop strong root systems and robust growth. Many of our clones are exclusive and not available anywhere else in the world.
+                </div>
+                
+                <p>Our collection includes over 400 varieties of Sarracenia, ranging from common species to incredibly rare clones that exist only in cultivation after their wild populations were destroyed. We also carry premium Venus flytraps, Darlingtonia, bog orchids, and companion plants.</p>
+                
+                <p><strong>Ordering:</strong> Email orders to meizzwang@gmail.com before sending payment. If you're looking for anything not on our list, feel free to ask! Response time: typically within 24 hours Monday-Friday.</p>
+            </section>
+        </main>
+    </section>
+
+    <!-- CART PAGE -->
+    <section id="cart-page" class="page-section">
+        <main class="container">
+            <h1>Shopping Cart</h1>
+            <div class="cart-container">
+                <div id="cart-items">
+                    <!-- Cart items will be populated by JavaScript -->
+                </div>
+                <div id="cart-empty" style="text-align: center; padding: 2rem; display: none;">
+                    <h3>Your cart is empty</h3>
+                    <p>Browse our collection and add some amazing plants!</p>
+                    <button class="continue-shopping" onclick="navigateTo('home')">Continue Shopping</button>
+                </div>
+                <div id="cart-summary" style="display: none;">
+                    <div class="cart-summary-section">
+                        <div class="cart-total-line">
+                            <span>Subtotal:</span>
+                            <span>$<span id="cart-subtotal">0</span></span>
+                        </div>
+                        <div class="cart-total-line">
+                            <span>CA Sales Tax (est.):</span>
+                            <span>$<span id="cart-tax">0</span></span>
+                        </div>
+                        <div class="cart-total-line">
+                            <span>Shipping:</span>
+                            <span>TBD ($11-$40)</span>
+                        </div>
+                        <div class="cart-total-line">
+                            <span>Estimated Total (before shipping):</span>
+                            <span>$<span id="cart-total-amount">0</span></span>
+                        </div>
+                        <div class="tax-note">
+                            * CA sales tax will be calculated based on delivery address. Out-of-state orders may not require tax.
+                        </div>
+                    </div>
+                    
+                    <div class="bare-root-acknowledgment">
+                        <div class="acknowledgment-checkbox">
+                            <input type="checkbox" id="bare-root-checkbox" required>
+                            <label for="bare-root-checkbox" class="acknowledgment-text">
+                                <strong>I understand that all plants are shipped bare root.</strong><br>
+                                Plants will arrive without soil and may appear dormant or stressed. This is normal for bare root shipping and plants will recover with proper care.
+                            </label>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="payment-methods-info">
+                        <h4>Payment Methods Accepted:</h4>
+                        <p>Zelle, Venmo, Cashapp, PayPal, Cash, Check, Money Orders</p>
+                        <p style="font-size: 0.9rem; font-style: italic;">If you need different payment instructions, please let me know - if I can accommodate, I will do what I can to work with you!</p>
+                    </div>
+                    
+                    <button class="checkout-btn" id="checkout-button" onclick="showOrderForm()" disabled>Submit Order Request</button>
+                    <button class="continue-shopping" onclick="navigateTo('home')">Continue Shopping</button>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- ORDER FORM PAGE -->
+    <section id="order-form-page" class="page-section">
+        <main class="container">
+            <h1>Submit Order Request</h1>
+            <div class="order-form-container">
+                <div class="order-summary">
+                    <h3>Order Summary</h3>
+                    <div id="order-items-review"></div>
+                    <div id="order-totals-review"></div>
+                </div>
+                
+                <form id="order-form" class="order-form">
+                    <h3>Your Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="customer-name">Full Name *</label>
+                        <input type="text" id="customer-name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customer-email">Email Address *</label>
+                        <input type="email" id="customer-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customer-phone">Phone Number</label>
+                        <input type="tel" id="customer-phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shipping-address">Shipping Address *</label>
+                        <textarea id="shipping-address" name="address" rows="4" required placeholder="Street Address
+City, State ZIP
+Country"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="preferred-payment">Preferred Payment Method</label>
+                        <select id="preferred-payment" name="payment">
+                            <option value="">Select payment method</option>
+                            <option value="zelle">Zelle</option>
+                            <option value="venmo">Venmo</option>
+                            <option value="cashapp">CashApp</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="check">Check</option>
+                            <option value="money-order">Money Order</option>
+                            <option value="cash">Cash (pickup only)</option>
+                            <option value="other">Other (please specify in notes)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="order-notes">Additional Notes</label>
+                        <textarea id="order-notes" name="notes" rows="3" placeholder="Special requests, questions, or other payment method details..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="submit-order-btn">Send Order Request</button>
+                        <button type="button" class="back-to-cart-btn" onclick="showCart()">Back to Cart</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </section>
+
+    <!-- Dynamic Category Pages (will be populated by JavaScript) -->
+    <section id="flavas-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Flava Collection</h1>
+            <div class="plant-grid" id="flavas-grid"></div>
+        </main>
+    </section>
+
+    <section id="leucophyllas-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Leucophylla Collection</h1>
+            <div class="plant-grid" id="leucophyllas-grid"></div>
+        </main>
+    </section>
+
+    <section id="purpureas-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Purpurea Collection</h1>
+            <div class="plant-grid" id="purpureas-grid"></div>
+        </main>
+    </section>
+
+    <section id="minors-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Minor Collection</h1>
+            <div class="plant-grid" id="minors-grid"></div>
+        </main>
+    </section>
+
+    <section id="hybrids-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Hybrids Collection</h1>
+            <div class="plant-grid" id="hybrids-grid"></div>
+        </main>
+    </section>
+
+    <section id="venus-flytraps-page" class="page-section">
+        <main class="container">
+            <h1>Venus Flytraps Collection</h1>
+            <div class="plant-grid" id="venus-flytraps-grid"></div>
+        </main>
+    </section>
+
+    <section id="darlingtonia-page" class="page-section">
+        <main class="container">
+            <h1>Darlingtonia Collection</h1>
+            <div class="plant-grid" id="darlingtonia-grid"></div>
+        </main>
+    </section>
+
+    <section id="companion-plants-page" class="page-section">
+        <main class="container">
+            <h1>Companion Plants Collection</h1>
+            <div class="plant-grid" id="companion-plants-grid"></div>
+        </main>
+    </section>
+
+    <script>
+        // Google Sheets Integration
+        const SHEET_CONFIG = {
+            SHEET_ID: '1AYHCuD1PoRHl7zDlQ32ishH_usO3-nTydlUnFP4urI8',
+            API_KEY: 'AIzaSyDx_BUUT80GhgoK7PgjyEjX_eRORvFIWbY',
+            SHEET_NAME: 'Sheet1',
+            RANGE: 'A:P'
+        };
+
+        // Google Forms Configuration
+        const GOOGLE_FORMS_CONFIG = {
+            FORM_URL: 'https://docs.google.com/forms/d/1D65DYB9o-LFosm0i9oh8xU_z76po65CHeu-8kVx65yU/formResponse',
+            // Updated field entry IDs after changing field types to paragraph
+            FIELDS: {
+                customer_name: 'entry.961803740',
+                customer_email: 'entry.1598399655',
+                customer_phone: 'entry.1274433847',
+                shipping_address: 'entry.697537469',
+                preferred_payment: 'entry.329257219',
+                order_items: 'entry.1178592632',
+                subtotal: 'entry.1688673874',
+                tax_amount: 'entry.2124900688',
+                estimated_total: 'entry.404301782',
+                additional_notes: 'entry.247536416'
+            }
+        };
+
+        // Global variables
+        let plantData = {};
+        let isDataLoaded = false;
+        let currentPage = 'home';
+        let currentCategory = null;
+        
+        // Clean up existing cart data that might have HTML entities
+        function cleanCartData(cartData) {
+            return cartData.map(item => ({
+                ...item,
+                name: decodeHtmlEntities(item.name || ''),
+                size: decodeHtmlEntities(item.size || '')
+            }));
+        }
+        
+        let cart = cleanCartData(JSON.parse(localStorage.getItem('mikeWangCart')) || []);
+        
+        // Save cleaned cart back to localStorage
+        if (cart.length > 0) {
+            localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+        }
+
+        // Cache configuration
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+        let dataCache = { data: null, timestamp: null };
+
+        // Category backgrounds
+        const categoryBackgrounds = {
+            'flavas': 'https://live.staticflickr.com/65535/51284418390_2f9bf2e79d_c.jpg',
+            'leucophyllas': 'https://live.staticflickr.com/65535/53829158978_a8f125315e_z.jpg',
+            'purpureas': 'https://live.staticflickr.com/65535/51361353022_0e745835da_c.jpg',
+            'minors': 'https://live.staticflickr.com/65535/48642896238_e7f4f4ce51_c.jpg',
+            'hybrids': 'https://live.staticflickr.com/65535/51200676052_d362e5da59_c.jpg',
+            'venus-flytraps': 'https://live.staticflickr.com/65535/51385432853_9cb5417e1c_c.jpg',
+            'darlingtonia': 'https://live.staticflickr.com/5350/10262670945_1555a0f8c3_c.jpg',
+            'companion-plants': 'https://farm6.staticflickr.com/5828/21114148498_6dbd421ed9_c.jpg'
+        };
+
+        // Category descriptions
+        const categoryDescriptions = {
+            'flavas': 'Yellow pitcher plants with incredible variety - from common forms to extremely rare clones',
+            'leucophyllas': 'White-topped pitcher plants including extinct Hurricane Creek White varieties',
+            'purpureas': 'Purple pitcher plants including rare venosa and montana varieties',
+            'minors': 'Hooded pitcher plants including giant okefenokeensis varieties extinct in the wild',
+            'hybrids': 'Registered cultivars and rare crosses including exclusives',
+            'venus-flytraps': 'Dionaea muscipula cultivars and location-documented wild genetics',
+            'darlingtonia': 'Cobra plants from California and Oregon populations',
+            'companion-plants': 'Bog orchids, lilies, and other carnivorous plant companions'
+        };
+
+        // Fetch plant data from Google Sheets
+        async function fetchPlantData() {
+            if (dataCache.data && dataCache.timestamp && 
+                (Date.now() - dataCache.timestamp) < CACHE_DURATION) {
+                console.log('Using cached data');
+                return dataCache.data;
+            }
+
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_CONFIG.SHEET_ID}/values/${SHEET_CONFIG.SHEET_NAME}!${SHEET_CONFIG.RANGE}?key=${SHEET_CONFIG.API_KEY}`;
+            
+            try {
+                console.log('Fetching data from Google Sheets...');
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                dataCache.data = data;
+                dataCache.timestamp = Date.now();
+                return data;
+            } catch (error) {
+                console.error('Error fetching data from Google Sheets:', error);
+                throw error;
+            }
+        }
+
+        // Convert Google Sheets data to plant data format
+        function convertSheetsDataToPlantData(sheetsData) {
+            if (!sheetsData.values || sheetsData.values.length < 2) {
+                console.warn('No data found in Google Sheets');
+                return {};
+            }
+            
+            const [headers, ...rows] = sheetsData.values;
+            console.log(`Converting ${rows.length} plants from Google Sheets`);
+            
+            const categories = {};
+            
+            rows.forEach((row, index) => {
+                try {
+                    if (!row[0] || !row[1]) return; // Skip empty rows
+                    
+                    const plant = convertRowToPlant(headers, row);
+                    if (plant) {
+                        if (!categories[plant.category]) {
+                            categories[plant.category] = [];
+                        }
+                        
+                        const { category, ...plantWithoutCategory } = plant;
+                        categories[category].push(plantWithoutCategory);
+                    }
+                } catch (error) {
+                    console.error(`Error processing row ${index + 2}:`, error, row);
+                }
+            });
+            
+            console.log('Categories found:', Object.keys(categories));
+            return categories;
+        }
+
+        // Convert a single row to plant object
+        function convertRowToPlant(headers, row) {
+            const getColumn = (name) => headers.indexOf(name);
+            
+            const category = row[getColumn('category')]?.trim();
+            const id = row[getColumn('id')]?.trim();
+            
+            if (!category || !id) return null;
+            
+            // Build prices array
+            const prices = [];
+            for (let i = 1; i <= 3; i++) {
+                const sizeName = row[getColumn(`size${i}_name`)]?.trim();
+                const sizePrice = parseFloat(row[getColumn(`size${i}_price`)]);
+                
+                if (sizeName && !isNaN(sizePrice)) {
+                    prices.push({ size: sizeName, price: sizePrice });
+                }
+            }
+            
+            // Convert features string to array
+            const featuresString = row[getColumn('features')]?.trim();
+            const features = featuresString ? featuresString.split('|').map(f => f.trim()) : [];
+            
+            // Handle image URL
+            const imageUrl = row[getColumn('image_url')]?.trim();
+            const image = (imageUrl && imageUrl !== 'null' && imageUrl !== '') ? imageUrl : null;
+            
+            return {
+                category: category,
+                id: id,
+                name: row[getColumn('name')]?.trim() || '',
+                location: row[getColumn('location')]?.trim() || '',
+                variety: row[getColumn('variety')]?.trim() || '',
+                description: row[getColumn('description')]?.trim() || '',
+                features: features,
+                prices: prices,
+                image: image,
+                status: row[getColumn('status')]?.trim() || 'available',
+                availability: row[getColumn('availability')]?.trim() || 'available'
+            };
+        }
+
+        // Initialize plant data
+        async function initializePlantData() {
+            try {
+                showLoadingIndicator();
+                
+                const sheetsData = await fetchPlantData();
+                plantData = convertSheetsDataToPlantData(sheetsData);
+                isDataLoaded = true;
+                
+                console.log('Plant data loaded successfully:', plantData);
+                
+                hideLoadingIndicator();
+                updateCartIcon();
+                loadHomePage();
+                
+                // If we're on a category page, reload the data
+                if (currentPage && currentPage !== 'home') {
+                    loadCategoryData(currentPage);
+                }
+                
+            } catch (error) {
+                console.error('Failed to load plant data:', error);
+                hideLoadingIndicator();
+                alert('Failed to load plant data from Google Sheets. Please refresh the page to try again.');
+            }
+        }
+
+        // Load home page with category cards
+        function loadHomePage() {
+            const categoriesContainer = document.getElementById('home-categories');
+            if (!categoriesContainer || !isDataLoaded) return;
+
+            const categoryCards = Object.keys(plantData).map(category => {
+                const count = plantData[category].length;
+                const background = categoryBackgrounds[category] || '';
+                const description = categoryDescriptions[category] || '';
+                const title = category.split('-').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+
+                return `
+                    <div class="category-card" onclick="navigateTo('${category}')" style="background-image: url('${background}')">
+                        <h3 class="category-title">${title}</h3>
+                        <p class="category-description">${description}</p>
+                        <div class="category-count">${count} varieties available</div>
+                    </div>
+                `;
+            }).join('');
+
+            categoriesContainer.innerHTML = categoryCards;
+        }
+
+        // Show/hide loading indicator
+        function showLoadingIndicator() {
+            document.getElementById('data-loader').style.display = 'flex';
+        }
+
+        function hideLoadingIndicator() {
+            document.getElementById('data-loader').style.display = 'none';
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const targetPage = document.getElementById(page + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+                document.getElementById('nav-' + page)?.classList.add('active');
+            }
+
+            window.location.hash = page;
+            currentPage = page;
+
+            if (page === 'home') {
+                loadHomePage();
+            } else if (page !== 'cart') {
+                loadCategoryData(page);
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        // Load category data
+        function loadCategoryData(category) {
+            currentCategory = category;
+            const data = plantData[category];
+            
+            if (data) {
+                renderPlants(data, category);
+            }
+        }
+
+        // Render plants
+        function renderPlants(plants, category) {
+            const grid = document.getElementById(category + '-grid');
+            if (!grid) return;
+
+            grid.innerHTML = plants.map(plant => createPlantCard(plant)).join('');
+
+            // Handle image loading errors
+            grid.querySelectorAll('.plant-image img').forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    this.parentElement.classList.add('placeholder');
+                    const icon = getPlantIcon(plants.find(p => p.id === this.closest('.plant-card').querySelector('.plant-id').textContent)?.variety || category);
+                    this.parentElement.innerHTML = `<span style="font-size: 4rem; color: white;">${icon}</span>`;
+                });
+            });
+
+            // Add event listeners for add to cart buttons
+            grid.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    try {
+                        if (this.disabled) return;
+                        
+                        const plantId = this.dataset.plantId;
+                        const plantName = this.dataset.plantName;
+                        const size = this.dataset.size;
+                        const price = parseFloat(this.dataset.price);
+                        const sizeIndex = parseInt(this.dataset.sizeIndex);
+                        
+                        console.log('Adding to cart:', {plantId, plantName, size, price, sizeIndex});
+                        addToCart(plantId, plantName, size, price, sizeIndex);
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        alert('Error adding item to cart. Please try again.');
+                    }
+                });
+            });
+        }
+
+        // Create plant card HTML
+        function createPlantCard(plant) {
+            const pricesHTML = plant.prices.map((priceOption, index) => `
+                <div class="price-option">
+                    <div class="price-info">
+                        <span>${priceOption.size}</span>
+                        <span style="font-weight: bold; font-size: 1.2rem;">$${priceOption.price}</span>
+                    </div>
+                    <button class="add-to-cart-btn" 
+                            data-plant-id="${plant.id}" 
+                            data-plant-name="${plant.name}" 
+                            data-size="${priceOption.size}" 
+                            data-price="${priceOption.price}" 
+                            data-size-index="${index}"
+                            ${plant.availability !== 'available' ? 'disabled' : ''}>
+                        ${plant.availability === 'available' ? 'Add to Cart' : 'Sold Out'}
+                    </button>
+                </div>
+            `).join('');
+
+            const featuresHTML = plant.features.map(feature => 
+                `<span class="feature-tag">${feature}</span>`
+            ).join('');
+
+            const imageHTML = plant.image ? 
+                `<img src="${plant.image}" alt="${plant.name}" loading="lazy">` :
+                `<span style="font-size: 4rem; color: white;">${getPlantIcon(plant.variety)}</span>`;
+
+            return `
+                <div class="plant-card">
+                    <div class="plant-image ${plant.image ? '' : 'placeholder'}">
+                        ${imageHTML}
+                        <div class="status-badge status-${plant.status}">${plant.status.replace('-', ' ')}</div>
+                    </div>
+                    <div class="plant-info">
+                        <div class="plant-id">${plant.id}</div>
+                        <h3 class="plant-name">${plant.name}</h3>
+                        <p class="plant-location">${plant.location}</p>
+                        <p class="plant-description">${plant.description}</p>
+                        <div class="plant-features">
+                            ${featuresHTML}
+                        </div>
+                        <div class="plant-pricing">
+                            <div class="price-options">
+                                ${pricesHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get plant icon
+        function getPlantIcon(variety) {
+            const iconMap = {
+                'flavas': '🌿',
+                'leucophyllas': '🏺', 
+                'hybrids': '🌸',
+                'venus-flytraps': '🦷',
+                'darlingtonia': '🐍',
+                'companion-plants': '🌺',
+                'purpureas': '💜',
+                'minors': '🔍',
+                'rubricorpora': '🌿',
+                'rugelii': '🌿',
+                'ornata': '🌿',
+                'atropurpurea': '🌿',
+                'maxima': '🌿',
+                'cuprea': '🌿',
+                'moorei': '🌸',
+                'cultivar': '🌸'
+            };
+            return iconMap[variety] || '🌿';
+        }
+
+        // Cart functionality
+        function addToCart(plantId, plantName, size, price, sizeIndex) {
+            const existingItemIndex = cart.findIndex(item => 
+                item.id === plantId && item.sizeIndex === sizeIndex
+            );
+            
+            if (existingItemIndex >= 0) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: plantId,
+                    name: plantName,
+                    size: size,
+                    price: price,
+                    sizeIndex: sizeIndex,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+            updateCartIcon();
+            showCartNotification(plantName);
+        }
+
+        function removeFromCart(plantId, sizeIndex) {
+            cart = cart.filter(item => !(item.id === plantId && item.sizeIndex === sizeIndex));
+            localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+            updateCartIcon();
+            if (currentPage === 'cart') {
+                showCart();
+            }
+        }
+
+        function updateCartQuantity(plantId, sizeIndex, newQuantity) {
+            const itemIndex = cart.findIndex(item => 
+                item.id === plantId && item.sizeIndex === sizeIndex
+            );
+            
+            if (itemIndex >= 0) {
+                if (newQuantity <= 0) {
+                    removeFromCart(plantId, sizeIndex);
+                } else {
+                    cart[itemIndex].quantity = newQuantity;
+                    localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+                    updateCartIcon();
+                    if (currentPage === 'cart') {
+                        showCart();
+                    }
+                }
+            }
+        }
+
+        function updateCartIcon() {
+            const cartCount = document.getElementById('cart-count');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (totalItems > 0) {
+                cartCount.textContent = totalItems;
+                cartCount.style.display = 'block';
+            } else {
+                cartCount.style.display = 'none';
+            }
+        }
+
+        function showCartNotification(plantName) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #7cb342;
+                color: white;
+                padding: 1rem;
+                border-radius: 5px;
+                z-index: 10001;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            `;
+            notification.textContent = `Added ${plantName} to cart!`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function showCart() {
+            // Update current page
+            currentPage = 'cart';
+            
+            // Hide all other pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Update nav active states
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show cart page
+            document.getElementById('cart-page').classList.add('active');
+            
+            // Render cart items
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartEmpty = document.getElementById('cart-empty');
+            const cartSummary = document.getElementById('cart-summary');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '';
+                cartEmpty.style.display = 'block';
+                cartSummary.style.display = 'none';
+                return;
+            }
+            
+            cartEmpty.style.display = 'none';
+            cartSummary.style.display = 'block';
+            
+            const cartHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-size">${item.size} - $${item.price}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.sizeIndex}, ${item.quantity - 1})">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.sizeIndex}, ${item.quantity + 1})">+</button>
+                        </div>
+                        <button style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;" 
+                                onclick="removeFromCart('${item.id}', ${item.sizeIndex})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            cartItemsContainer.innerHTML = cartHTML;
+            
+            // Calculate totals
+            updateCartTotals();
+            
+            // Set up checkbox listener
+            const checkbox = document.getElementById('bare-root-checkbox');
+            const checkoutButton = document.getElementById('checkout-button');
+            
+            if (checkbox && checkoutButton) {
+                checkbox.addEventListener('change', function() {
+                    checkoutButton.disabled = !this.checked;
+                    if (this.checked) {
+                        checkoutButton.style.opacity = '1';
+                        checkoutButton.style.cursor = 'pointer';
+                    } else {
+                        checkoutButton.style.opacity = '0.5';
+                        checkoutButton.style.cursor = 'not-allowed';
+                    }
+                });
+            }
+        }
+
+        function updateCartTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const taxRate = 0.0875; // CA sales tax rate (approximate)
+            const tax = subtotal * taxRate;
+            const total = subtotal + tax;
+            
+            document.getElementById('cart-subtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('cart-tax').textContent = tax.toFixed(2);
+            document.getElementById('cart-total-amount').textContent = total.toFixed(2);
+        }
+
+        function showOrderForm() {
+            // Check if bare root checkbox is checked
+            const bareRootCheckbox = document.getElementById('bare-root-checkbox');
+            if (!bareRootCheckbox || !bareRootCheckbox.checked) {
+                alert('Please acknowledge that you understand all plants are shipped bare root before proceeding.');
+                return;
+            }
+
+            // Hide all other pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show order form page
+            document.getElementById('order-form-page').classList.add('active');
+            currentPage = 'order-form';
+            
+            // Populate order summary
+            populateOrderSummary();
+            
+            // Set up form submission
+            setupOrderForm();
+        }
+
+        function populateOrderSummary() {
+            const orderItems = cart.map(item => `
+                <div class="order-item-review">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <span style="color: #666;">${item.size}</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div>Qty: ${item.quantity}</div>
+                            <div style="font-weight: bold;">$${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const taxRate = 0.0875;
+            const tax = subtotal * taxRate;
+            const estimatedTotal = subtotal + tax;
+            
+            const totalsHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Subtotal:</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>CA Sales Tax (est.):</span>
+                    <span>$${tax.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Shipping:</span>
+                    <span>TBD ($11-$40)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; border-top: 1px solid #ddd; padding-top: 0.5rem; margin-top: 0.5rem;">
+                    <span>Estimated Total (before shipping):</span>
+                    <span>$${estimatedTotal.toFixed(2)}</span>
+                </div>
+            `;
+            
+            document.getElementById('order-items-review').innerHTML = orderItems;
+            document.getElementById('order-totals-review').innerHTML = totalsHTML;
+        }
+
+        function setupOrderForm() {
+            const form = document.getElementById('order-form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const customerData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    payment: formData.get('payment'),
+                    notes: formData.get('notes')
+                };
+                
+                submitOrderRequest(customerData);
+            };
+        }
+
+        // Function to decode HTML entities
+        function decodeHtmlEntities(text) {
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = text;
+            return textarea.value;
+        }
+
+        async function submitOrderRequest(customerData) {
+            // Show loading state
+            const submitButton = document.querySelector('.submit-order-btn');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Submitting Order...';
+            submitButton.disabled = true;
+
+            try {
+                // Create order summary
+                const orderItems = cart.map(item => 
+                    `${item.name} (${item.size}) - Qty: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`
+                ).join('\n');
+                
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const taxRate = 0.0875;
+                const tax = subtotal * taxRate;
+                const estimatedTotal = subtotal + tax;
+                
+                // Check if Google Forms is configured
+                if (GOOGLE_FORMS_CONFIG.FORM_URL === 'YOUR_GOOGLE_FORM_URL') {
+                    // Fallback to mailto if Google Forms not configured
+                    const emailBody = `Hi Mike,
+
+I would like to place an order for the following plants:
+
+CUSTOMER INFORMATION:
+Name: ${customerData.name}
+Email: ${customerData.email}
+Phone: ${customerData.phone || 'Not provided'}
+Shipping Address:
+${customerData.address}
+
+PREFERRED PAYMENT METHOD: ${customerData.payment || 'Not specified'}
+
+ORDER DETAILS:
+${orderItems}
+
+COST BREAKDOWN:
+Subtotal: $${subtotal.toFixed(2)}
+CA Sales Tax (est.): $${tax.toFixed(2)}
+Shipping: TBD ($11-$40 depending on order size/location)
+Estimated Total (before shipping): $${estimatedTotal.toFixed(2)}
+
+SHIPPING ACKNOWLEDGMENT:
+✓ I understand that all plants are shipped bare root
+✓ I understand that plants may appear dormant/stressed upon arrival
+✓ I understand this is normal for bare root shipping
+
+${customerData.notes ? `ADDITIONAL NOTES:\n${customerData.notes}\n\n` : ''}Please confirm the final shipping cost and provide payment details.
+
+Thank you!`;
+                    
+                    const emailSubject = `Plant Order Request - ${customerData.name} - Est. $${estimatedTotal.toFixed(2)}`;
+                    const mailtoLink = `mailto:meizzwang@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                    
+                    window.location.href = mailtoLink;
+                    alert('Google Forms not configured yet. Opening email client as fallback.');
+                    
+                } else {
+                    // Check for missing email field
+                    if (GOOGLE_FORMS_CONFIG.FIELDS.customer_email === 'entry.NEEDS_TO_BE_ADDED') {
+                        alert('Google Form setup incomplete: Customer Email field needs to be added to the form. Using email fallback.');
+                        
+                        // Use mailto fallback
+                        const emailBody = `Hi Mike,
+
+I would like to place an order for the following plants:
+
+CUSTOMER INFORMATION:
+Name: ${customerData.name}
+Email: ${customerData.email}
+Phone: ${customerData.phone || 'Not provided'}
+Shipping Address:
+${customerData.address}
+
+PREFERRED PAYMENT METHOD: ${customerData.payment || 'Not specified'}
+
+ORDER DETAILS:
+${orderItems}
+
+COST BREAKDOWN:
+Subtotal: $${subtotal.toFixed(2)}
+CA Sales Tax (est.): $${tax.toFixed(2)}
+Shipping: TBD ($11-$40 depending on order size/location)
+Estimated Total (before shipping): $${estimatedTotal.toFixed(2)}
+
+SHIPPING ACKNOWLEDGMENT:
+✓ I understand that all plants are shipped bare root
+✓ I understand that plants may appear dormant/stressed upon arrival
+✓ I understand this is normal for bare root shipping
+
+${customerData.notes ? `ADDITIONAL NOTES:\n${customerData.notes}\n\n` : ''}Please confirm the final shipping cost and provide payment details.
+
+Thank you!`;
+                        
+                        const emailSubject = `Plant Order Request - ${customerData.name} - Est. $${estimatedTotal.toFixed(2)}`;
+                        const mailtoLink = `mailto:meizzwang@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                        
+                        window.location.href = mailtoLink;
+                        return;
+                    }
+                    
+                    // Submit to Google Forms
+                    const formData = new FormData();
+                    
+                    console.log('Submitting to Google Forms with data:', {
+                        name: customerData.name,
+                        email: customerData.email,
+                        formUrl: GOOGLE_FORMS_CONFIG.FORM_URL
+                    });
+                    
+                    // Add all form fields
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_name, customerData.name);
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_email, customerData.email);
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_phone, customerData.phone || 'Not provided');
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.shipping_address, customerData.address);
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.preferred_payment, customerData.payment || 'Not specified');
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.order_items, orderItems);
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.subtotal, subtotal.toFixed(2));
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.tax_amount, tax.toFixed(2));
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.estimated_total, estimatedTotal.toFixed(2));
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.additional_notes, customerData.notes || 'None');
+                    
+                    // Try iframe submission method (more reliable for Google Forms)
+                    try {
+                        // Create a hidden iframe for form submission
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.name = 'hidden_iframe';
+                        document.body.appendChild(iframe);
+                        
+                        // Create a temporary form
+                        const tempForm = document.createElement('form');
+                        tempForm.method = 'POST';
+                        tempForm.action = GOOGLE_FORMS_CONFIG.FORM_URL;
+                        tempForm.target = 'hidden_iframe';
+                        
+                        // Add all fields as hidden inputs
+                        Object.keys(GOOGLE_FORMS_CONFIG.FIELDS).forEach(key => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = GOOGLE_FORMS_CONFIG.FIELDS[key];
+                            
+                            switch(key) {
+                                case 'customer_name':
+                                    input.value = customerData.name || '';
+                                    break;
+                                case 'customer_email':
+                                    input.value = customerData.email || '';
+                                    break;
+                                case 'customer_phone':
+                                    input.value = customerData.phone || 'Not provided';
+                                    break;
+                                case 'shipping_address':
+                                    input.value = customerData.address || '';
+                                    break;
+                                case 'preferred_payment':
+                                    input.value = customerData.payment || 'Not specified';
+                                    break;
+                                case 'order_items':
+                                    input.value = orderItems;
+                                    break;
+                                case 'subtotal':
+                                    input.value = subtotal.toFixed(2);
+                                    break;
+                                case 'tax_amount':
+                                    input.value = tax.toFixed(2);
+                                    break;
+                                case 'estimated_total':
+                                    input.value = estimatedTotal.toFixed(2);
+                                    break;
+                                case 'additional_notes':
+                                    input.value = customerData.notes || 'None';
+                                    break;
+                            }
+                            tempForm.appendChild(input);
+                        });
+                        
+                        document.body.appendChild(tempForm);
+                        
+                        console.log('Submitting to Google Forms via iframe method');
+                        tempForm.submit();
+                        
+                        // Clean up after submission
+                        setTimeout(() => {
+                            document.body.removeChild(tempForm);
+                            document.body.removeChild(iframe);
+                        }, 1000);
+                        
+                        console.log('Google Forms submission completed via iframe');
+                        
+                        // Show success message
+                        alert(`Order request submitted successfully! 
+
+Your order for $${estimatedTotal.toFixed(2)} (before shipping) has been sent to Mike.
+
+Mike will receive an automatic notification and will contact you at ${customerData.email} with shipping details and payment instructions.
+
+Thank you for your order!`);
+                        
+                    } catch (error) {
+                        console.error('Google Forms submission failed:', error);
+                        throw error; // This will trigger the catch block below
+                    }
+                }
+                
+                // Clear cart and return to home
+                cart = [];
+                localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+                updateCartIcon();
+                navigateTo('home');
+                
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                
+                // Fallback to mailto on error
+                const emailBody = `Hi Mike,
+
+I would like to place an order for the following plants:
+
+CUSTOMER INFORMATION:
+Name: ${customerData.name}
+Email: ${customerData.email}
+Phone: ${customerData.phone || 'Not provided'}
+Shipping Address:
+${customerData.address}
+
+PREFERRED PAYMENT METHOD: ${customerData.payment || 'Not specified'}
+
+ORDER DETAILS:
+${cart.map(item => `${item.name} (${item.size}) - Qty: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+
+Please confirm pricing and shipping details.
+
+Thank you!`;
+                
+                const emailSubject = `Plant Order Request - ${customerData.name}`;
+                const mailtoLink = `mailto:meizzwang@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                
+                window.location.href = mailtoLink;
+                alert('There was an error submitting the order. Opening your email client as backup.');
+                
+            } finally {
+                // Reset button state
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePlantData);
+
+        // Handle browser back/forward
+        window.addEventListener('hashchange', function() {
+            const page = window.location.hash.substring(1) || 'home';
+            if (page === 'cart') {
+                showCart();
+            } else {
+                navigateTo(page);
+            }
+        });
+
+        // Initialize from URL hash
+        window.addEventListener('load', function() {
+            const page = window.location.hash.substring(1) || 'home';
+            if (page === 'cart') {
+                showCart();
+            } else if (page !== 'home') {
+                navigateTo(page);
+            }
+        });
+    </script>
+</body>
+</html>
