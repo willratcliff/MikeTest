@@ -1413,14 +1413,12 @@ Country"></textarea>
         async function fetchPlantData() {
             if (dataCache.data && dataCache.timestamp && 
                 (Date.now() - dataCache.timestamp) < CACHE_DURATION) {
-                console.log('Using cached data');
                 return dataCache.data;
             }
 
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_CONFIG.SHEET_ID}/values/${SHEET_CONFIG.SHEET_NAME}!${SHEET_CONFIG.RANGE}?key=${SHEET_CONFIG.API_KEY}`;
             
             try {
-                console.log('Fetching data from Google Sheets...');
                 const response = await fetch(url);
                 
                 if (!response.ok) {
@@ -1440,12 +1438,10 @@ Country"></textarea>
         // Convert Google Sheets data to plant data format
         function convertSheetsDataToPlantData(sheetsData) {
             if (!sheetsData.values || sheetsData.values.length < 2) {
-                console.warn('No data found in Google Sheets');
                 return {};
             }
             
             const [headers, ...rows] = sheetsData.values;
-            console.log(`Converting ${rows.length} plants from Google Sheets`);
             
             const categories = {};
             
@@ -1467,7 +1463,6 @@ Country"></textarea>
                 }
             });
             
-            console.log('Categories found:', Object.keys(categories));
             return categories;
         }
 
@@ -1522,8 +1517,6 @@ Country"></textarea>
                 const sheetsData = await fetchPlantData();
                 plantData = convertSheetsDataToPlantData(sheetsData);
                 isDataLoaded = true;
-                
-                console.log('Plant data loaded successfully:', plantData);
                 
                 hideLoadingIndicator();
                 updateCartIcon();
