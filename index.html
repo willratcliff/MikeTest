@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mike Wang's Sarracenia - Premium Carnivorous Plants</title>
     
+    <!-- Google Analytics (Commented out - replace G-XXXXXXXXXX with real tracking ID) -->
+    <!-- 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    -->
+    
     <!-- Simple Password Protection -->
     <script>
         // Check if user is already authenticated this session
@@ -111,6 +116,69 @@
         .cart-icon-container {
             position: relative;
             cursor: pointer;
+        }
+
+        /* Search and Sort Controls */
+        .category-controls {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(124, 179, 66, 0.2);
+        }
+
+        .search-box {
+            padding: 0.8rem 1rem;
+            border: 2px solid #7cb342;
+            border-radius: 25px;
+            font-size: 1rem;
+            width: 300px;
+            max-width: 100%;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #5a8f2a;
+            box-shadow: 0 0 10px rgba(124, 179, 66, 0.3);
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .sort-btn {
+            padding: 0.8rem 1.2rem;
+            background: #7cb342;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .sort-btn:hover {
+            background: #5a8f2a;
+            transform: translateY(-2px);
+        }
+
+        .sort-btn.active {
+            background: #2c3e2d;
+        }
+
+        .results-count {
+            color: #5a8f2a;
+            font-weight: bold;
+            margin-left: 1rem;
         }
 
         .contact-info {
@@ -872,6 +940,26 @@
                 font-size: 0.9rem;
             }
 
+            .category-controls {
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .sort-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .sort-btn {
+                font-size: 0.8rem;
+                padding: 0.6rem 1rem;
+            }
+
             .cart-item {
                 flex-direction: column;
                 align-items: stretch;
@@ -1095,6 +1183,16 @@ Country"></textarea>
     <section id="flavas-page" class="page-section">
         <main class="container">
             <h1>Sarracenia Flava Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="flavas-search" placeholder="🔍 Search Flava varieties..." oninput="searchCategory('flavas')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('flavas', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('flavas', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('flavas', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="flavas-count"></div>
+            </div>
             <div class="plant-grid" id="flavas-grid"></div>
         </main>
     </section>
@@ -1102,6 +1200,16 @@ Country"></textarea>
     <section id="leucophyllas-page" class="page-section">
         <main class="container">
             <h1>Sarracenia Leucophylla Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="leucophyllas-search" placeholder="🔍 Search Leucophylla varieties..." oninput="searchCategory('leucophyllas')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('leucophyllas', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('leucophyllas', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('leucophyllas', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="leucophyllas-count"></div>
+            </div>
             <div class="plant-grid" id="leucophyllas-grid"></div>
         </main>
     </section>
@@ -1109,6 +1217,16 @@ Country"></textarea>
     <section id="purpureas-page" class="page-section">
         <main class="container">
             <h1>Sarracenia Purpurea Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="purpureas-search" placeholder="🔍 Search Purpurea varieties..." oninput="searchCategory('purpureas')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('purpureas', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('purpureas', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('purpureas', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="purpureas-count"></div>
+            </div>
             <div class="plant-grid" id="purpureas-grid"></div>
         </main>
     </section>
@@ -1116,6 +1234,16 @@ Country"></textarea>
     <section id="minors-page" class="page-section">
         <main class="container">
             <h1>Sarracenia Minor Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="minors-search" placeholder="🔍 Search Minor varieties..." oninput="searchCategory('minors')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('minors', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('minors', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('minors', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="minors-count"></div>
+            </div>
             <div class="plant-grid" id="minors-grid"></div>
         </main>
     </section>
@@ -1123,6 +1251,16 @@ Country"></textarea>
     <section id="hybrids-page" class="page-section">
         <main class="container">
             <h1>Sarracenia Hybrids Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="hybrids-search" placeholder="🔍 Search Hybrid varieties..." oninput="searchCategory('hybrids')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('hybrids', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('hybrids', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('hybrids', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="hybrids-count"></div>
+            </div>
             <div class="plant-grid" id="hybrids-grid"></div>
         </main>
     </section>
@@ -1130,6 +1268,16 @@ Country"></textarea>
     <section id="venus-flytraps-page" class="page-section">
         <main class="container">
             <h1>Venus Flytraps Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="venus-flytraps-search" placeholder="🔍 Search Venus Flytrap varieties..." oninput="searchCategory('venus-flytraps')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('venus-flytraps', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('venus-flytraps', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('venus-flytraps', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="venus-flytraps-count"></div>
+            </div>
             <div class="plant-grid" id="venus-flytraps-grid"></div>
         </main>
     </section>
@@ -1137,6 +1285,16 @@ Country"></textarea>
     <section id="darlingtonia-page" class="page-section">
         <main class="container">
             <h1>Darlingtonia Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="darlingtonia-search" placeholder="🔍 Search Darlingtonia varieties..." oninput="searchCategory('darlingtonia')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('darlingtonia', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('darlingtonia', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('darlingtonia', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="darlingtonia-count"></div>
+            </div>
             <div class="plant-grid" id="darlingtonia-grid"></div>
         </main>
     </section>
@@ -1144,6 +1302,16 @@ Country"></textarea>
     <section id="companion-plants-page" class="page-section">
         <main class="container">
             <h1>Companion Plants Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="companion-plants-search" placeholder="🔍 Search Companion plants..." oninput="searchCategory('companion-plants')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('companion-plants', 'name')">A-Z</button>
+                    <button class="sort-btn" onclick="sortCategory('companion-plants', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('companion-plants', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="companion-plants-count"></div>
+            </div>
             <div class="plant-grid" id="companion-plants-grid"></div>
         </main>
     </section>
@@ -1196,6 +1364,22 @@ Country"></textarea>
         if (cart.length > 0) {
             localStorage.setItem('mikeWangCart', JSON.stringify(cart));
         }
+
+        // Google Analytics Integration
+        // To activate, Mike needs to:
+        // 1. Go to https://analytics.google.com
+        // 2. Create account for mikesgarden.com (or whatever domain)
+        // 3. Get tracking ID (looks like G-XXXXXXXXXX)
+        // 4. Replace 'G-XXXXXXXXXX' below with real tracking ID
+        
+        // Google Analytics Global Site Tag (gtag.js)
+        // Uncomment and replace G-XXXXXXXXXX with real tracking ID when ready:
+        /*
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX'); // Replace with real tracking ID
+        */
 
         // Cache configuration
         const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
@@ -1420,12 +1604,122 @@ Country"></textarea>
         }
 
         // Load category data
+        // Search and Sort Functions
+        let originalCategoryData = {}; // Store original data for filtering
+        let currentSort = {}; // Track current sort for each category
+
+        function searchCategory(category) {
+            const searchTerm = document.getElementById(`${category}-search`).value.toLowerCase();
+            const originalData = originalCategoryData[category] || plantData[category] || [];
+            
+            let filteredData = originalData.filter(plant => 
+                plant.name.toLowerCase().includes(searchTerm) ||
+                plant.description.toLowerCase().includes(searchTerm) ||
+                plant.location.toLowerCase().includes(searchTerm)
+            );
+
+            // Apply current sort if any
+            if (currentSort[category]) {
+                filteredData = applySortToData(filteredData, currentSort[category]);
+            }
+
+            // Update results count
+            document.getElementById(`${category}-count`).textContent = 
+                `${filteredData.length} of ${originalData.length} plants`;
+
+            // Render filtered results
+            renderPlantGrid(category, filteredData);
+        }
+
+        function sortCategory(category, sortType) {
+            // Update active button
+            const buttons = document.querySelectorAll(`#${category}-page .sort-btn`);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Store current sort
+            currentSort[category] = sortType;
+
+            // Get current data (filtered or original)
+            const searchTerm = document.getElementById(`${category}-search`).value.toLowerCase();
+            const originalData = originalCategoryData[category] || plantData[category] || [];
+            
+            let dataToSort = searchTerm ? 
+                originalData.filter(plant => 
+                    plant.name.toLowerCase().includes(searchTerm) ||
+                    plant.description.toLowerCase().includes(searchTerm) ||
+                    plant.location.toLowerCase().includes(searchTerm)
+                ) : originalData;
+
+            // Apply sort
+            const sortedData = applySortToData(dataToSort, sortType);
+
+            // Render sorted results
+            renderPlantGrid(category, sortedData);
+        }
+
+        function applySortToData(data, sortType) {
+            const sortedData = [...data];
+            
+            switch(sortType) {
+                case 'name':
+                    return sortedData.sort((a, b) => a.name.localeCompare(b.name));
+                case 'price-low':
+                    return sortedData.sort((a, b) => getLowestPrice(a) - getLowestPrice(b));
+                case 'price-high':
+                    return sortedData.sort((a, b) => getLowestPrice(b) - getLowestPrice(a));
+                default:
+                    return sortedData;
+            }
+        }
+
+        function getLowestPrice(plant) {
+            if (!plant.prices || plant.prices.length === 0) return 0;
+            return Math.min(...plant.prices.map(p => p.price));
+        }
+
+        function renderPlantGrid(category, plants) {
+            const grid = document.getElementById(`${category}-grid`);
+            if (!grid) return;
+
+            if (plants.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">No plants found matching your search.</div>';
+                return;
+            }
+
+            grid.innerHTML = plants.map(plant => createPlantCard(plant)).join('');
+            setupCartButtons();
+        }
+
         function loadCategoryData(category) {
             currentCategory = category;
             const data = plantData[category];
             
             if (data) {
-                renderPlants(data, category);
+                // Store original data for search/filter functionality
+                originalCategoryData[category] = data;
+                
+                // Reset search and sort state
+                const searchBox = document.getElementById(`${category}-search`);
+                if (searchBox) searchBox.value = '';
+                
+                // Reset sort buttons
+                const buttons = document.querySelectorAll(`#${category}-page .sort-btn`);
+                buttons.forEach(btn => btn.classList.remove('active'));
+                const nameBtn = document.querySelector(`#${category}-page .sort-btn[onclick*="name"]`);
+                if (nameBtn) nameBtn.classList.add('active');
+                
+                // Set default sort
+                currentSort[category] = 'name';
+                const sortedData = applySortToData(data, 'name');
+                
+                // Update results count
+                const countElement = document.getElementById(`${category}-count`);
+                if (countElement) {
+                    countElement.textContent = `${data.length} plants`;
+                }
+                
+                renderPlantGrid(category, sortedData);
             }
         }
 
