@@ -1187,7 +1187,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="flavas-search" placeholder="🔍 Search Flava varieties..." oninput="searchCategory('flavas')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('flavas', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('flavas', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('flavas', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('flavas', 'price-high')">Price ↓</button>
                 </div>
@@ -1204,7 +1204,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="leucophyllas-search" placeholder="🔍 Search Leucophylla varieties..." oninput="searchCategory('leucophyllas')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('leucophyllas', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('leucophyllas', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('leucophyllas', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('leucophyllas', 'price-high')">Price ↓</button>
                 </div>
@@ -1221,7 +1221,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="purpureas-search" placeholder="🔍 Search Purpurea varieties..." oninput="searchCategory('purpureas')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('purpureas', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('purpureas', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('purpureas', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('purpureas', 'price-high')">Price ↓</button>
                 </div>
@@ -1238,7 +1238,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="minors-search" placeholder="🔍 Search Minor varieties..." oninput="searchCategory('minors')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('minors', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('minors', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('minors', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('minors', 'price-high')">Price ↓</button>
                 </div>
@@ -1255,7 +1255,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="hybrids-search" placeholder="🔍 Search Hybrid varieties..." oninput="searchCategory('hybrids')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('hybrids', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('hybrids', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('hybrids', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('hybrids', 'price-high')">Price ↓</button>
                 </div>
@@ -1272,7 +1272,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="venus-flytraps-search" placeholder="🔍 Search Venus Flytrap varieties..." oninput="searchCategory('venus-flytraps')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('venus-flytraps', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('venus-flytraps', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('venus-flytraps', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('venus-flytraps', 'price-high')">Price ↓</button>
                 </div>
@@ -1289,7 +1289,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="darlingtonia-search" placeholder="🔍 Search Darlingtonia varieties..." oninput="searchCategory('darlingtonia')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('darlingtonia', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('darlingtonia', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('darlingtonia', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('darlingtonia', 'price-high')">Price ↓</button>
                 </div>
@@ -1306,7 +1306,7 @@ Country"></textarea>
                 <input type="text" class="search-box" id="companion-plants-search" placeholder="🔍 Search Companion plants..." oninput="searchCategory('companion-plants')">
                 <div class="sort-controls">
                     <span>Sort by:</span>
-                    <button class="sort-btn active" onclick="sortCategory('companion-plants', 'name')">A-Z</button>
+                    <button class="sort-btn active" onclick="sortCategory('companion-plants', 'clone')">Clone #</button>
                     <button class="sort-btn" onclick="sortCategory('companion-plants', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('companion-plants', 'price-high')">Price ↓</button>
                 </div>
@@ -1662,8 +1662,8 @@ Country"></textarea>
             const sortedData = [...data];
             
             switch(sortType) {
-                case 'name':
-                    return sortedData.sort((a, b) => a.name.localeCompare(b.name));
+                case 'clone':
+                    return sortedData.sort((a, b) => getCloneNumber(a) - getCloneNumber(b));
                 case 'price-low':
                     return sortedData.sort((a, b) => getLowestPrice(a) - getLowestPrice(b));
                 case 'price-high':
@@ -1671,6 +1671,19 @@ Country"></textarea>
                 default:
                     return sortedData;
             }
+        }
+
+        function getCloneNumber(plant) {
+            // Extract clone number from plant name (F1, F2, L15, etc.)
+            const match = plant.name.match(/([A-Z])(\d+)/);
+            if (match) {
+                const letter = match[1];
+                const number = parseInt(match[2]);
+                // Sort by letter first, then number (F1, F2, ..., L1, L2, etc.)
+                return (letter.charCodeAt(0) - 65) * 1000 + number;
+            }
+            // If no clone pattern found, sort alphabetically as fallback
+            return plant.name.charCodeAt(0) * 1000;
         }
 
         function getLowestPrice(plant) {
@@ -1706,12 +1719,12 @@ Country"></textarea>
                 // Reset sort buttons
                 const buttons = document.querySelectorAll(`#${category}-page .sort-btn`);
                 buttons.forEach(btn => btn.classList.remove('active'));
-                const nameBtn = document.querySelector(`#${category}-page .sort-btn[onclick*="name"]`);
-                if (nameBtn) nameBtn.classList.add('active');
+                const cloneBtn = document.querySelector(`#${category}-page .sort-btn[onclick*="clone"]`);
+                if (cloneBtn) cloneBtn.classList.add('active');
                 
                 // Set default sort
-                currentSort[category] = 'name';
-                const sortedData = applySortToData(data, 'name');
+                currentSort[category] = 'clone';
+                const sortedData = applySortToData(data, 'clone');
                 
                 // Update results count
                 const countElement = document.getElementById(`${category}-count`);
