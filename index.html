@@ -1678,12 +1678,12 @@ Country"></textarea>
             const match = plant.name.match(/([A-Z])(\d+)/);
             if (match) {
                 const letter = match[1];
-                const number = parseInt(match[2]);
-                // Sort by letter first, then number (F1, F2, ..., L1, L2, etc.)
-                return (letter.charCodeAt(0) - 65) * 1000 + number;
+                const number = parseInt(match[2]); // parseInt handles F01, F1, F100 correctly
+                // Sort by letter first, then number numerically (F1, F2, F10, F100, then L1, L2, etc.)
+                return (letter.charCodeAt(0) - 65) * 100000 + number; // Increased multiplier for larger numbers
             }
             // If no clone pattern found, sort alphabetically as fallback
-            return plant.name.charCodeAt(0) * 1000;
+            return plant.name.charCodeAt(0) * 100000;
         }
 
         function getLowestPrice(plant) {
