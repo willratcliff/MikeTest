@@ -79,10 +79,6 @@
             cursor: pointer;
         }
 
-        .logo::before {
-            content: "🌿";
-            font-size: 2.5rem;
-        }
 
         nav ul {
             display: flex;
@@ -849,17 +845,16 @@
             }
             
             .header-content {
-                flex-direction: column;
+                justify-content: center;
                 gap: 0.5rem;
             }
             
             .logo {
-                font-size: 0;
-                justify-content: center;
+                display: none;
             }
             
-            .logo::before {
-                font-size: 2.5rem;
+            .contact-info {
+                display: none;
             }
             
             nav ul {
