@@ -996,6 +996,10 @@
                         <li><a onclick="navigateTo('purpureas')" id="nav-purpureas">Purpureas</a></li>
                         <li><a onclick="navigateTo('minors')" id="nav-minors">Minors</a></li>
                         <li><a onclick="navigateTo('hybrids')" id="nav-hybrids">Hybrids</a></li>
+                        <li><a onclick="navigateTo('alata')" id="nav-alata">Alata</a></li>
+                        <li><a onclick="navigateTo('psittacina')" id="nav-psittacina">Psittacina</a></li>
+                        <li><a onclick="navigateTo('oreophila')" id="nav-oreophila">Oreophila</a></li>
+                        <li><a onclick="navigateTo('rubra')" id="nav-rubra">Rubra</a></li>
                         <li><a onclick="navigateTo('venus-flytraps')" id="nav-venus-flytraps">Venus Flytraps</a></li>
                         <li><a onclick="navigateTo('utricularia')" id="nav-utricularia">Utricularia</a></li>
                         <li><a onclick="navigateTo('cephalotus')" id="nav-cephalotus">Cephalotus</a></li>
@@ -1267,6 +1271,84 @@ Country"></textarea>
         </main>
     </section>
 
+    <section id="alata-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Alata Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="alata-search" placeholder="🔍 Search Alata varieties..." oninput="searchCategory('alata')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('alata', 'clone')">Clone #</button>
+                    <button class="sort-btn" onclick="sortCategory('alata', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('alata', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="alata-count"></div>
+            </div>
+            <div class="plant-grid" id="alata-grid"></div>
+        </main>
+    </section>
+
+    <section id="psittacina-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Psittacina Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="psittacina-search" placeholder="🔍 Search Psittacina varieties..." oninput="searchCategory('psittacina')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('psittacina', 'clone')">Clone #</button>
+                    <button class="sort-btn" onclick="sortCategory('psittacina', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('psittacina', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="psittacina-count"></div>
+            </div>
+            <div class="plant-grid" id="psittacina-grid"></div>
+        </main>
+    </section>
+
+    <section id="oreophila-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Oreophila Collection</h1>
+            
+            <div style="background: #ffeb3b; border: 3px solid #f57f17; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: center;">
+                <h2 style="color: #e65100; font-size: 1.8rem; font-weight: bold; margin: 0;">
+                    ⚠️ CALIFORNIA SHIPPING ONLY ⚠️
+                </h2>
+                <p style="color: #d84315; font-size: 1.2rem; font-weight: bold; margin: 10px 0 0 0;">
+                    S. oreophila is CITES Appendix I listed and U.S. Endangered Species Act protected - interstate shipping prohibited by federal law
+                </p>
+            </div>
+            
+            <div class="category-controls">
+                <input type="text" class="search-box" id="oreophila-search" placeholder="🔍 Search Oreophila varieties..." oninput="searchCategory('oreophila')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('oreophila', 'clone')">Clone #</button>
+                    <button class="sort-btn" onclick="sortCategory('oreophila', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('oreophila', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="oreophila-count"></div>
+            </div>
+            <div class="plant-grid" id="oreophila-grid"></div>
+        </main>
+    </section>
+
+    <section id="rubra-page" class="page-section">
+        <main class="container">
+            <h1>Sarracenia Rubra Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="rubra-search" placeholder="🔍 Search Rubra varieties..." oninput="searchCategory('rubra')">
+                <div class="sort-controls">
+                    <span>Sort by:</span>
+                    <button class="sort-btn active" onclick="sortCategory('rubra', 'clone')">Clone #</button>
+                    <button class="sort-btn" onclick="sortCategory('rubra', 'price-low')">Price ↑</button>
+                    <button class="sort-btn" onclick="sortCategory('rubra', 'price-high')">Price ↓</button>
+                </div>
+                <div class="results-count" id="rubra-count"></div>
+            </div>
+            <div class="plant-grid" id="rubra-grid"></div>
+        </main>
+    </section>
+
     <section id="venus-flytraps-page" class="page-section">
         <main class="container">
             <h1>Venus Flytraps Collection</h1>
@@ -1426,6 +1508,10 @@ Country"></textarea>
             'purpureas': 'https://live.staticflickr.com/65535/51361353022_0e745835da_c.jpg',
             'minors': 'https://live.staticflickr.com/65535/48642896238_e7f4f4ce51_c.jpg',
             'hybrids': 'https://live.staticflickr.com/65535/51200676052_d362e5da59_c.jpg',
+            'alata': 'https://live.staticflickr.com/65535/53829158978_a8f125315e_z.jpg',
+            'psittacina': 'https://live.staticflickr.com/65535/51200676052_d362e5da59_c.jpg',
+            'oreophila': 'https://live.staticflickr.com/65535/48642896238_e7f4f4ce51_c.jpg',
+            'rubra': 'https://live.staticflickr.com/65535/51361353022_0e745835da_c.jpg',
             'venus-flytraps': 'https://live.staticflickr.com/65535/51385432853_9cb5417e1c_c.jpg',
             'utricularia': 'https://live.staticflickr.com/65535/54033405537_5a6139e54f_b.jpg',
             'cephalotus': 'https://live.staticflickr.com/65535/52607780999_7899815c25_b.jpg',
@@ -1440,6 +1526,10 @@ Country"></textarea>
             'purpureas': 'Purple pitcher plants including rare venosa and montana varieties',
             'minors': 'Hooded pitcher plants including giant okefenokeensis varieties extinct in the wild',
             'hybrids': 'Registered cultivars and rare crosses including exclusives',
+            'alata': 'Southern pitcher plants with distinctive wide-mouthed pitchers and prominent wings',
+            'psittacina': 'Parrot pitcher plants with unique lobster-trap style pitchers and colorful venation',
+            'oreophila': 'Mountain pitcher plants - critically endangered species with distinctive yellow-green pitchers',
+            'rubra': 'Sweet pitcher plants with slender, elegant pitchers in various colorations',
             'venus-flytraps': 'Dionaea muscipula cultivars and location-documented wild genetics',
             'utricularia': 'Bladderworts - aquatic and terrestrial carnivorous plants with tiny bladder traps',
             'cephalotus': 'Australian pitcher plants - unique carnivorous plants with distinctive pitchers',
@@ -1889,6 +1979,10 @@ Country"></textarea>
                 'flavas': '🌿',
                 'leucophyllas': '🏺', 
                 'hybrids': '🌸',
+                'alata': '🪴',
+                'psittacina': '🦜',
+                'oreophila': '⛰️',
+                'rubra': '🌹',
                 'venus-flytraps': '🦷',
                 'utricularia': '🫧',
                 'cephalotus': '🏺',
