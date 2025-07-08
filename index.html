@@ -997,6 +997,8 @@
                         <li><a onclick="navigateTo('minors')" id="nav-minors">Minors</a></li>
                         <li><a onclick="navigateTo('hybrids')" id="nav-hybrids">Hybrids</a></li>
                         <li><a onclick="navigateTo('venus-flytraps')" id="nav-venus-flytraps">Venus Flytraps</a></li>
+                        <li><a onclick="navigateTo('utricularia')" id="nav-utricularia">Utricularia</a></li>
+                        <li><a onclick="navigateTo('cephalotus')" id="nav-cephalotus">Cephalotus</a></li>
                         <li><a onclick="navigateTo('darlingtonia')" id="nav-darlingtonia">Darlingtonia</a></li>
                         <li><a onclick="navigateTo('companion-plants')" id="nav-companion-plants">Companion Plants</a></li>
                     </ul>
@@ -1316,6 +1318,38 @@ Country"></textarea>
         </main>
     </section>
 
+    <section id="utricularia-page" class="page-section">
+        <main class="container">
+            <h1>Utricularia Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="utricularia-search" placeholder="🔍 Search Utricularia varieties..." oninput="searchCategory('utricularia')">
+                <div class="sort-controls">
+                    <button onclick="sortCategory('utricularia', 'price-low')" class="sort-btn">Price: Low to High</button>
+                    <button onclick="sortCategory('utricularia', 'price-high')" class="sort-btn">Price: High to Low</button>
+                    <button onclick="sortCategory('utricularia', 'alphabetical')" class="sort-btn">A-Z</button>
+                </div>
+                <div class="results-count" id="utricularia-count"></div>
+            </div>
+            <div class="plant-grid" id="utricularia-grid"></div>
+        </main>
+    </section>
+
+    <section id="cephalotus-page" class="page-section">
+        <main class="container">
+            <h1>Cephalotus Collection</h1>
+            <div class="category-controls">
+                <input type="text" class="search-box" id="cephalotus-search" placeholder="🔍 Search Cephalotus varieties..." oninput="searchCategory('cephalotus')">
+                <div class="sort-controls">
+                    <button onclick="sortCategory('cephalotus', 'price-low')" class="sort-btn">Price: Low to High</button>
+                    <button onclick="sortCategory('cephalotus', 'price-high')" class="sort-btn">Price: High to Low</button>
+                    <button onclick="sortCategory('cephalotus', 'alphabetical')" class="sort-btn">A-Z</button>
+                </div>
+                <div class="results-count" id="cephalotus-count"></div>
+            </div>
+            <div class="plant-grid" id="cephalotus-grid"></div>
+        </main>
+    </section>
+
     <script>
         // Google Sheets Integration
         const SHEET_CONFIG = {
@@ -1393,6 +1427,8 @@ Country"></textarea>
             'minors': 'https://live.staticflickr.com/65535/48642896238_e7f4f4ce51_c.jpg',
             'hybrids': 'https://live.staticflickr.com/65535/51200676052_d362e5da59_c.jpg',
             'venus-flytraps': 'https://live.staticflickr.com/65535/51385432853_9cb5417e1c_c.jpg',
+            'utricularia': 'https://live.staticflickr.com/65535/54033405537_5a6139e54f_b.jpg',
+            'cephalotus': 'https://live.staticflickr.com/65535/52607780999_7899815c25_b.jpg',
             'darlingtonia': 'https://live.staticflickr.com/5350/10262670945_1555a0f8c3_c.jpg',
             'companion-plants': 'https://farm6.staticflickr.com/5828/21114148498_6dbd421ed9_c.jpg'
         };
@@ -1405,6 +1441,8 @@ Country"></textarea>
             'minors': 'Hooded pitcher plants including giant okefenokeensis varieties extinct in the wild',
             'hybrids': 'Registered cultivars and rare crosses including exclusives',
             'venus-flytraps': 'Dionaea muscipula cultivars and location-documented wild genetics',
+            'utricularia': 'Bladderworts - aquatic and terrestrial carnivorous plants with tiny bladder traps',
+            'cephalotus': 'Australian pitcher plants - unique carnivorous plants with distinctive pitchers',
             'darlingtonia': 'Cobra plants from California and Oregon populations',
             'companion-plants': 'Bog orchids, lilies, and other carnivorous plant companions'
         };
@@ -1539,19 +1577,24 @@ Country"></textarea>
             const categoriesContainer = document.getElementById('home-categories');
             if (!categoriesContainer || !isDataLoaded) return;
 
-            const categoryCards = Object.keys(plantData).map(category => {
-                const count = plantData[category].length;
+            // Show all configured categories, even if they don't have data yet
+            const allCategories = Object.keys(categoryBackgrounds);
+            
+            const categoryCards = allCategories.map(category => {
+                const count = plantData[category] ? plantData[category].length : 0;
                 const background = categoryBackgrounds[category] || '';
                 const description = categoryDescriptions[category] || '';
                 const title = category.split('-').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1)
                 ).join(' ');
 
+                const countText = count > 0 ? `${count} varieties available` : 'Coming soon';
+
                 return `
                     <div class="category-card" onclick="navigateTo('${category}')" style="background-image: url('${background}')">
                         <h3 class="category-title">${title}</h3>
                         <p class="category-description">${description}</p>
-                        <div class="category-count">${count} varieties available</div>
+                        <div class="category-count">${countText}</div>
                     </div>
                 `;
             }).join('');
@@ -1847,6 +1890,8 @@ Country"></textarea>
                 'leucophyllas': '🏺', 
                 'hybrids': '🌸',
                 'venus-flytraps': '🦷',
+                'utricularia': '🫧',
+                'cephalotus': '🏺',
                 'darlingtonia': '🐍',
                 'companion-plants': '🌺',
                 'purpureas': '💜',
