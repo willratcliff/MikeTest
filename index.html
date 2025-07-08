@@ -1076,7 +1076,7 @@
                             <span>$<span id="cart-subtotal">0</span></span>
                         </div>
                         <div class="cart-total-line">
-                            <span>CA Sales Tax (est.):</span>
+                            <span id="tax-label">Sales Tax (est.):</span>
                             <span>$<span id="cart-tax">0</span></span>
                         </div>
                         <div class="cart-total-line">
@@ -1087,8 +1087,8 @@
                             <span>Estimated Total (before shipping):</span>
                             <span>$<span id="cart-total-amount">0</span></span>
                         </div>
-                        <div class="tax-note">
-                            * CA sales tax will be calculated based on delivery address. Out-of-state orders may not require tax.
+                        <div class="tax-note" id="tax-note">
+                            * CA sales tax (10.25%) applies to California deliveries only. Out-of-state orders are tax-free.
                         </div>
                     </div>
                     
@@ -2072,13 +2072,16 @@ Country"></textarea>
 
         function updateCartTotals() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const taxRate = 0.0875; // CA sales tax rate (approximate)
+            const taxRate = 0.1025; // CA sales tax rate 10.25%
             const tax = subtotal * taxRate;
             const total = subtotal + tax;
             
             document.getElementById('cart-subtotal').textContent = subtotal.toFixed(2);
             document.getElementById('cart-tax').textContent = tax.toFixed(2);
             document.getElementById('cart-total-amount').textContent = total.toFixed(2);
+            
+            // Update tax label to clarify CA only
+            document.getElementById('tax-label').textContent = 'CA Sales Tax (10.25%):';
         }
 
         function showOrderForm() {
@@ -2122,7 +2125,7 @@ Country"></textarea>
             `).join('');
             
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const taxRate = 0.0875;
+            const taxRate = 0.1025;
             const tax = subtotal * taxRate;
             const estimatedTotal = subtotal + tax;
             
@@ -2132,7 +2135,7 @@ Country"></textarea>
                     <span>$${subtotal.toFixed(2)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>CA Sales Tax (est.):</span>
+                    <span>CA Sales Tax (10.25%):</span>
                     <span>$${tax.toFixed(2)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -2189,7 +2192,7 @@ Country"></textarea>
                 ).join('\n');
                 
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const taxRate = 0.0875;
+                const taxRate = 0.1025;
                 const tax = subtotal * taxRate;
                 const estimatedTotal = subtotal + tax;
                 
@@ -2214,9 +2217,12 @@ ${orderItems}
 
 COST BREAKDOWN:
 Subtotal: $${subtotal.toFixed(2)}
-CA Sales Tax (est.): $${tax.toFixed(2)}
+CA Sales Tax (10.25%): $${tax.toFixed(2)}
 Shipping: TBD ($11-$40 depending on order size/location)
 Estimated Total (before shipping): $${estimatedTotal.toFixed(2)}
+
+TAX NOTE: CA sales tax (10.25%) shown above applies only to California deliveries. 
+Out-of-state orders are tax-free - deduct $${tax.toFixed(2)} if shipping outside CA.
 
 SHIPPING ACKNOWLEDGMENT:
 ✓ I understand that all plants are shipped bare root
@@ -2257,9 +2263,12 @@ ${orderItems}
 
 COST BREAKDOWN:
 Subtotal: $${subtotal.toFixed(2)}
-CA Sales Tax (est.): $${tax.toFixed(2)}
+CA Sales Tax (10.25%): $${tax.toFixed(2)}
 Shipping: TBD ($11-$40 depending on order size/location)
 Estimated Total (before shipping): $${estimatedTotal.toFixed(2)}
+
+TAX NOTE: CA sales tax (10.25%) shown above applies only to California deliveries. 
+Out-of-state orders are tax-free - deduct $${tax.toFixed(2)} if shipping outside CA.
 
 SHIPPING ACKNOWLEDGMENT:
 ✓ I understand that all plants are shipped bare root
