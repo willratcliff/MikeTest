@@ -322,6 +322,28 @@
             border: 1px solid rgba(124, 179, 66, 0.2);
         }
 
+        .stock-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #2c3e2d;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .stock-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .stock-toggle input[type="checkbox"] {
+            margin: 0;
+            cursor: pointer;
+        }
+
         .search-box {
             padding: 0.8rem 1rem;
             border: 2px solid #7cb342;
@@ -1443,6 +1465,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('flavas', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('flavas', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="flavas-include-out-of-stock" onchange="toggleOutOfStock('flavas')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="flavas-count"></div>
             </div>
             <div class="plant-grid" id="flavas-grid"></div>
@@ -1460,6 +1486,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('leucophyllas', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('leucophyllas', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="leucophyllas-include-out-of-stock" onchange="toggleOutOfStock('leucophyllas')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="leucophyllas-count"></div>
             </div>
             <div class="plant-grid" id="leucophyllas-grid"></div>
@@ -1477,6 +1507,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('purpureas', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('purpureas', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="purpureas-include-out-of-stock" onchange="toggleOutOfStock('purpureas')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="purpureas-count"></div>
             </div>
             <div class="plant-grid" id="purpureas-grid"></div>
@@ -1494,6 +1528,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('minors', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('minors', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="minors-include-out-of-stock" onchange="toggleOutOfStock('minors')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="minors-count"></div>
             </div>
             <div class="plant-grid" id="minors-grid"></div>
@@ -1511,6 +1549,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('hybrids', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('hybrids', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="hybrids-include-out-of-stock" onchange="toggleOutOfStock('hybrids')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="hybrids-count"></div>
             </div>
             <div class="plant-grid" id="hybrids-grid"></div>
@@ -1528,6 +1570,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('alata', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('alata', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="alata-include-out-of-stock" onchange="toggleOutOfStock('alata')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="alata-count"></div>
             </div>
             <div class="plant-grid" id="alata-grid"></div>
@@ -1545,6 +1591,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('psittacina', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('psittacina', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="psittacina-include-out-of-stock" onchange="toggleOutOfStock('psittacina')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="psittacina-count"></div>
             </div>
             <div class="plant-grid" id="psittacina-grid"></div>
@@ -1572,6 +1622,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('oreophila', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('oreophila', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="oreophila-include-out-of-stock" onchange="toggleOutOfStock('oreophila')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="oreophila-count"></div>
             </div>
             <div class="plant-grid" id="oreophila-grid"></div>
@@ -1589,6 +1643,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('rubra', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('rubra', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="rubra-include-out-of-stock" onchange="toggleOutOfStock('rubra')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="rubra-count"></div>
             </div>
             <div class="plant-grid" id="rubra-grid"></div>
@@ -1606,6 +1664,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('venus-flytraps', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('venus-flytraps', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="venus-flytraps-include-out-of-stock" onchange="toggleOutOfStock('venus-flytraps')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="venus-flytraps-count"></div>
             </div>
             <div class="plant-grid" id="venus-flytraps-grid"></div>
@@ -1623,6 +1685,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('darlingtonia', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('darlingtonia', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="darlingtonia-include-out-of-stock" onchange="toggleOutOfStock('darlingtonia')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="darlingtonia-count"></div>
             </div>
             <div class="plant-grid" id="darlingtonia-grid"></div>
@@ -1640,6 +1706,10 @@ Country"></textarea>
                     <button class="sort-btn" onclick="sortCategory('companion-plants', 'price-low')">Price ↑</button>
                     <button class="sort-btn" onclick="sortCategory('companion-plants', 'price-high')">Price ↓</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="companion-plants-include-out-of-stock" onchange="toggleOutOfStock('companion-plants')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="companion-plants-count"></div>
             </div>
             <div class="plant-grid" id="companion-plants-grid"></div>
@@ -1656,6 +1726,10 @@ Country"></textarea>
                     <button onclick="sortCategory('utricularia', 'price-high')" class="sort-btn">Price: High to Low</button>
                     <button onclick="sortCategory('utricularia', 'alphabetical')" class="sort-btn">A-Z</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="utricularia-include-out-of-stock" onchange="toggleOutOfStock('utricularia')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="utricularia-count"></div>
             </div>
             <div class="plant-grid" id="utricularia-grid"></div>
@@ -1672,6 +1746,10 @@ Country"></textarea>
                     <button onclick="sortCategory('cephalotus', 'price-high')" class="sort-btn">Price: High to Low</button>
                     <button onclick="sortCategory('cephalotus', 'alphabetical')" class="sort-btn">A-Z</button>
                 </div>
+                <label class="stock-toggle">
+                    <input type="checkbox" id="cephalotus-include-out-of-stock" onchange="toggleOutOfStock('cephalotus')">
+                    Include out of stock items
+                </label>
                 <div class="results-count" id="cephalotus-count"></div>
             </div>
             <div class="plant-grid" id="cephalotus-grid"></div>
@@ -2057,16 +2135,37 @@ Country"></textarea>
         // Search and Sort Functions
         let originalCategoryData = {}; // Store original data for filtering
         let currentSort = {}; // Track current sort for each category
+        let includeOutOfStock = {}; // Track out-of-stock inclusion for each category
+
+        function toggleOutOfStock(category) {
+            const checkbox = document.getElementById(`${category}-include-out-of-stock`);
+            includeOutOfStock[category] = checkbox ? checkbox.checked : false;
+            
+            console.log(`Toggling out of stock for ${category}: ${includeOutOfStock[category]}`);
+            
+            // Re-run search to apply the filter
+            searchCategory(category);
+        }
 
         function searchCategory(category) {
             const searchTerm = document.getElementById(`${category}-search`).value.toLowerCase();
             const originalData = originalCategoryData[category] || plantData[category] || [];
             
-            let filteredData = originalData.filter(plant => 
-                plant.name.toLowerCase().includes(searchTerm) ||
-                plant.description.toLowerCase().includes(searchTerm) ||
-                plant.location.toLowerCase().includes(searchTerm)
-            );
+            let filteredData = originalData.filter(plant => {
+                // Search filter
+                const matchesSearch = plant.name.toLowerCase().includes(searchTerm) ||
+                    plant.description.toLowerCase().includes(searchTerm) ||
+                    plant.location.toLowerCase().includes(searchTerm);
+                
+                // Stock filter - if checkbox is unchecked, exclude out-of-stock items
+                // Default to "in stock" for any status, only exclude explicitly out-of-stock statuses
+                const outOfStockStatuses = ['sold-out', 'sold out', 'unavailable', 'not available'];
+                const isOutOfStock = outOfStockStatuses.includes((plant.status || '').toLowerCase()) || 
+                                   outOfStockStatuses.includes((plant.availability || '').toLowerCase());
+                const includeThis = includeOutOfStock[category] || !isOutOfStock;
+                
+                return matchesSearch && includeThis;
+            });
 
             // Apply current sort if any
             if (currentSort[category]) {
