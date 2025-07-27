@@ -59,7 +59,7 @@
             background: rgba(44, 62, 45, 0.95);
             backdrop-filter: blur(10px);
             color: white;
-            padding: 1.5rem 0;
+            padding: 1rem 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
@@ -70,47 +70,236 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hamburger-menu {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .hamburger-menu:hover {
+            color: #7cb342;
         }
 
         .logo {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #7cb342;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 15px;
             cursor: pointer;
-        }
-
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #e8f5e8;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        nav a:hover, nav a.active {
-            color: #7cb342;
-            background: rgba(124, 179, 66, 0.1);
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 1rem;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            min-width: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Navigation Menu Styles */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100vh;
+            background: rgba(44, 62, 45, 0.98);
+            backdrop-filter: blur(10px);
+            transition: left 0.3s ease;
+            z-index: 1001;
+            padding: 2rem 0;
+            overflow-y: auto;
+        }
+
+        .nav-menu.open {
+            left: 0;
+        }
+
+        .nav-menu-header {
+            padding: 0 2rem 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .nav-menu-title {
+            color: #7cb342;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .nav-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-close:hover {
+            color: #7cb342;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-menu li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 1rem 2rem;
+            color: #e8f5e8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background: rgba(124, 179, 66, 0.2);
+            color: #7cb342;
+            border-left: 4px solid #7cb342;
+            padding-left: calc(2rem - 4px);
+        }
+
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .nav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hide old navigation */
+        nav {
+            display: none;
+        }
+
+        /* Image Modal Styles */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-modal.show {
+            display: flex;
+        }
+
+        .image-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-modal img {
+            width: 100%;
+            height: auto;
+            max-width: 80vw;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .image-modal-close:hover {
+            background: #cc0000;
+        }
+
+        .image-modal-title {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #2c3e2d;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .cart-icon-container {
@@ -440,8 +629,14 @@
         .plant-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .plant-image img:hover {
+            transform: scale(1.05);
         }
 
         .plant-image.placeholder {
@@ -470,6 +665,8 @@
             font-weight: 600;
             text-transform: uppercase;
             z-index: 2;
+            background: rgba(147, 51, 234, 0.9);
+            color: white;
         }
 
         .status-back-in-stock {
@@ -494,6 +691,16 @@
 
         .status-extinct {
             background: rgba(220, 38, 38, 0.9);
+            color: white;
+        }
+
+        .status-available {
+            background: rgba(34, 197, 94, 0.9);
+            color: white;
+        }
+
+        .status-in-stock {
+            background: rgba(34, 197, 94, 0.9);
             color: white;
         }
 
@@ -1002,38 +1209,55 @@
         </div>
     </div>
 
+    <!-- Navigation Overlay -->
+    <div class="nav-overlay" id="nav-overlay" onclick="closeNavMenu()"></div>
+    
+    <!-- Navigation Menu -->
+    <div class="nav-menu" id="nav-menu">
+        <button class="nav-close" onclick="closeNavMenu()">×</button>
+        <div class="nav-menu-header">
+            <h3 class="nav-menu-title">Categories</h3>
+        </div>
+        <ul>
+            <li><a onclick="navigateAndCloseMenu('home')" id="nav-home" class="active">Home</a></li>
+            <li><a onclick="navigateAndCloseMenu('flavas')" id="nav-flavas">Flava</a></li>
+            <li><a onclick="navigateAndCloseMenu('leucophyllas')" id="nav-leucophyllas">Leucophylla</a></li>
+            <li><a onclick="navigateAndCloseMenu('purpureas')" id="nav-purpureas">Purpurea</a></li>
+            <li><a onclick="navigateAndCloseMenu('minors')" id="nav-minors">Minor</a></li>
+            <li><a onclick="navigateAndCloseMenu('hybrids')" id="nav-hybrids">Hybrid</a></li>
+            <li><a onclick="navigateAndCloseMenu('alata')" id="nav-alata">Alata</a></li>
+            <li><a onclick="navigateAndCloseMenu('psittacina')" id="nav-psittacina">Psittacina</a></li>
+            <li><a onclick="navigateAndCloseMenu('oreophila')" id="nav-oreophila">Oreophila</a></li>
+            <li><a onclick="navigateAndCloseMenu('rubra')" id="nav-rubra">Rubra</a></li>
+            <li><a onclick="navigateAndCloseMenu('venus-flytraps')" id="nav-venus-flytraps">Venus Flytrap</a></li>
+            <li><a onclick="navigateAndCloseMenu('utricularia')" id="nav-utricularia">Utricularia</a></li>
+            <li><a onclick="navigateAndCloseMenu('cephalotus')" id="nav-cephalotus">Cephalotus</a></li>
+            <li><a onclick="navigateAndCloseMenu('darlingtonia')" id="nav-darlingtonia">Darlingtonia</a></li>
+            <li><a onclick="navigateAndCloseMenu('companion-plants')" id="nav-companion-plants">Companion Plant</a></li>
+        </ul>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal" id="image-modal" onclick="closeImageModal(event)">
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+            <div class="image-modal-title" id="modal-title"></div>
+            <img id="modal-image" src="" alt="">
+        </div>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
-                <a class="logo" onclick="navigateTo('home')">Mike Wang's Sarracenia</a>
-                <nav>
-                    <ul>
-                        <li><a onclick="navigateTo('home')" id="nav-home" class="active">Home</a></li>
-                        <li><a onclick="navigateTo('flavas')" id="nav-flavas">Flavas</a></li>
-                        <li><a onclick="navigateTo('leucophyllas')" id="nav-leucophyllas">Leucophyllas</a></li>
-                        <li><a onclick="navigateTo('purpureas')" id="nav-purpureas">Purpureas</a></li>
-                        <li><a onclick="navigateTo('minors')" id="nav-minors">Minors</a></li>
-                        <li><a onclick="navigateTo('hybrids')" id="nav-hybrids">Hybrids</a></li>
-                        <li><a onclick="navigateTo('alata')" id="nav-alata">Alata</a></li>
-                        <li><a onclick="navigateTo('psittacina')" id="nav-psittacina">Psittacina</a></li>
-                        <li><a onclick="navigateTo('oreophila')" id="nav-oreophila">Oreophila</a></li>
-                        <li><a onclick="navigateTo('rubra')" id="nav-rubra">Rubra</a></li>
-                        <li><a onclick="navigateTo('venus-flytraps')" id="nav-venus-flytraps">Venus Flytraps</a></li>
-                        <li><a onclick="navigateTo('utricularia')" id="nav-utricularia">Utricularia</a></li>
-                        <li><a onclick="navigateTo('cephalotus')" id="nav-cephalotus">Cephalotus</a></li>
-                        <li><a onclick="navigateTo('darlingtonia')" id="nav-darlingtonia">Darlingtonia</a></li>
-                        <li><a onclick="navigateTo('companion-plants')" id="nav-companion-plants">Companion Plants</a></li>
-                    </ul>
-                </nav>
+                <div class="header-left">
+                    <button class="hamburger-menu" onclick="openNavMenu()">☰</button>
+                    <a class="logo" onclick="navigateTo('home')">Mike Wang's Sarracenia</a>
+                </div>
                 <div class="header-right">
-                    <div class="cart-icon-container" onclick="showCart()" style="cursor: pointer; margin-right: 2rem;">
-                        <span style="font-size: 1.8rem;">🛒</span>
-                        <span id="cart-count" style="background: #ff4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.8rem; position: absolute; top: -5px; right: -5px; display: none;">0</span>
-                    </div>
-                    <div class="contact-info">
-                        <div>Email: meizzwang@gmail.com</div>
-                        <div>Ships Year-Round • Bare Root</div>
+                    <div class="cart-icon" onclick="showCart()">
+                        🛒
+                        <span id="cart-count">0</span>
                     </div>
                 </div>
             </div>
@@ -1541,6 +1765,24 @@ Country"></textarea>
             'companion-plants': 'https://live.staticflickr.com/65535/54428648700_d655f7e6b5_b.jpg'
         };
 
+        // Category titles (singular)
+        const categoryTitles = {
+            'flavas': 'Flava',
+            'leucophyllas': 'Leucophylla',
+            'purpureas': 'Purpurea',
+            'minors': 'Minor',
+            'hybrids': 'Hybrid',
+            'alata': 'Alata',
+            'psittacina': 'Psittacina',
+            'oreophila': 'Oreophila',
+            'rubra': 'Rubra',
+            'venus-flytraps': 'Venus Flytrap',
+            'utricularia': 'Utricularia',
+            'cephalotus': 'Cephalotus',
+            'darlingtonia': 'Darlingtonia',
+            'companion-plants': 'Companion Plant'
+        };
+
         // Category descriptions
         const categoryDescriptions = {
             'flavas': 'Yellow pitcher plants with incredible variety - from common forms to extremely rare clones',
@@ -1696,7 +1938,7 @@ Country"></textarea>
                 const count = plantData[category] ? plantData[category].length : 0;
                 const background = categoryBackgrounds[category] || '';
                 const description = categoryDescriptions[category] || '';
-                const title = category.split('-').map(word => 
+                const title = categoryTitles[category] || category.split('-').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1)
                 ).join(' ');
 
@@ -1723,20 +1965,80 @@ Country"></textarea>
             document.getElementById('data-loader').style.display = 'none';
         }
 
+        // Hamburger Menu Functions
+        function openNavMenu() {
+            document.getElementById('nav-menu').classList.add('open');
+            document.getElementById('nav-overlay').classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+        }
+
+        function closeNavMenu() {
+            document.getElementById('nav-menu').classList.remove('open');
+            document.getElementById('nav-overlay').classList.remove('show');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close menu when navigation link is clicked
+        function navigateAndCloseMenu(page) {
+            closeNavMenu();
+            navigateTo(page);
+        }
+
+        // Image Modal Functions
+        function openImageModal(imageSrc, plantName) {
+            console.log('Opening image modal:', imageSrc, plantName); // Debug log
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalTitle = document.getElementById('modal-title');
+            
+            if (!modal || !modalImage || !modalTitle) {
+                console.error('Modal elements not found');
+                return;
+            }
+            
+            modalImage.src = imageSrc;
+            modalImage.alt = plantName;
+            modalTitle.textContent = plantName;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeImageModal(event) {
+            // Only close if clicking the modal background or close button (not the content)
+            if (event && event.target !== event.currentTarget && !event.target.classList.contains('image-modal-close')) {
+                return;
+            }
+            
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('show');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
         // Navigation
         function navigateTo(page) {
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active');
             });
 
-            document.querySelectorAll('nav a').forEach(link => {
+            // Remove active states from both old nav and hamburger menu
+            document.querySelectorAll('nav a, .nav-menu a').forEach(link => {
                 link.classList.remove('active');
             });
 
             const targetPage = document.getElementById(page + '-page');
             if (targetPage) {
                 targetPage.classList.add('active');
-                document.getElementById('nav-' + page)?.classList.add('active');
+                // Only add active state to "Home" in the hamburger menu, not other categories
+                if (page === 'home') {
+                    document.getElementById('nav-' + page)?.classList.add('active');
+                }
             }
 
             window.location.hash = page;
@@ -1850,6 +2152,42 @@ Country"></textarea>
 
             grid.innerHTML = plants.map(plant => createPlantCard(plant)).join('');
             
+            // Add click event listeners for image modal (Safari-compatible)
+            grid.querySelectorAll('.clickable-image').forEach((img, index) => {
+                console.log('Adding click listener to image', index, img.src, img.dataset);
+                
+                // Try multiple event binding approaches for Safari compatibility
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', function(e) {
+                    console.log('Image clicked!', this.dataset.imageSrc, this.dataset.plantName);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const imageSrc = this.dataset.imageSrc;
+                    const plantName = this.dataset.plantName;
+                    if (imageSrc && plantName) {
+                        openImageModal(imageSrc, plantName);
+                    } else {
+                        console.error('Missing image data:', {imageSrc, plantName});
+                    }
+                });
+                
+                // Alternative approach using mousedown for Safari
+                img.addEventListener('mousedown', function(e) {
+                    console.log('Image mousedown!', this.dataset.imageSrc);
+                });
+                
+                // Touch events for mobile Safari
+                img.addEventListener('touchstart', function(e) {
+                    console.log('Image touch!', this.dataset.imageSrc);
+                    e.preventDefault();
+                    const imageSrc = this.dataset.imageSrc;
+                    const plantName = this.dataset.plantName;
+                    if (imageSrc && plantName) {
+                        openImageModal(imageSrc, plantName);
+                    }
+                });
+            });
+            
             // Add event listeners for add to cart buttons
             grid.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', function() {
@@ -1921,6 +2259,42 @@ Country"></textarea>
                 });
             });
 
+            // Add click event listeners for image modal (Safari-compatible)
+            grid.querySelectorAll('.clickable-image').forEach((img, index) => {
+                console.log('Adding click listener to image', index, img.src, img.dataset);
+                
+                // Try multiple event binding approaches for Safari compatibility
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', function(e) {
+                    console.log('Image clicked!', this.dataset.imageSrc, this.dataset.plantName);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const imageSrc = this.dataset.imageSrc;
+                    const plantName = this.dataset.plantName;
+                    if (imageSrc && plantName) {
+                        openImageModal(imageSrc, plantName);
+                    } else {
+                        console.error('Missing image data:', {imageSrc, plantName});
+                    }
+                });
+                
+                // Alternative approach using mousedown for Safari
+                img.addEventListener('mousedown', function(e) {
+                    console.log('Image mousedown!', this.dataset.imageSrc);
+                });
+                
+                // Touch events for mobile Safari
+                img.addEventListener('touchstart', function(e) {
+                    console.log('Image touch!', this.dataset.imageSrc);
+                    e.preventDefault();
+                    const imageSrc = this.dataset.imageSrc;
+                    const plantName = this.dataset.plantName;
+                    if (imageSrc && plantName) {
+                        openImageModal(imageSrc, plantName);
+                    }
+                });
+            });
+
             // Add event listeners for add to cart buttons
             grid.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', function() {
@@ -1968,12 +2342,12 @@ Country"></textarea>
             ).join('');
 
             const imageHTML = plant.image ? 
-                `<img src="${plant.image}" alt="${plant.name}" loading="lazy">` :
+                `<img src="${plant.image}" alt="${plant.name}" loading="lazy" class="clickable-image" data-image-src="${plant.image}" data-plant-name="${plant.name.replace(/"/g, '&quot;')}" title="Click to view full size">` :
                 `<span style="font-size: 4rem; color: white;">${getPlantIcon(plant.variety)}</span>`;
 
             return `
                 <div class="plant-card">
-                    <div class="plant-image ${plant.image ? '' : 'placeholder'}">
+                    <div class="plant-image ${plant.image ? '' : 'placeholder'}" ${plant.image ? `onclick="openImageModal('${plant.image}', '${plant.name.replace(/'/g, '\\\'')}')" style="cursor: pointer;" title="Click to view full size"` : ''}>
                         ${imageHTML}
                         <div class="status-badge status-${plant.status}">${plant.status.replace('-', ' ')}</div>
                     </div>
