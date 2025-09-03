@@ -1118,6 +1118,12 @@
             .form-actions {
                 flex-direction: column;
             }
+            
+            /* Stack address fields on mobile for better usability */
+            #city, #state, #zip {
+                flex: 1 1 100% !important;
+                margin-bottom: 0.5rem;
+            }
         }
         
         @media (max-width: 768px) {
@@ -1326,7 +1332,7 @@
                             <span>$<span id="cart-subtotal">0</span></span>
                         </div>
                         <div class="cart-total-line">
-                            <span id="tax-label">Sales Tax (est.):</span>
+                            <span id="tax-label">Sales Tax (10.25%) - only applies to CA customers:</span>
                             <span>$<span id="cart-tax">0</span></span>
                         </div>
                         <div class="cart-total-line">
@@ -1396,10 +1402,68 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="shipping-address">Shipping Address</label>
-                        <textarea id="shipping-address" name="address" rows="4" placeholder="Street Address
-City, State ZIP
-Country"></textarea>
+                        <label>Shipping Address *</label>
+                        <input type="text" id="street-address" name="street" required placeholder="Street Address" autocomplete="street-address" style="margin-bottom: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="city" name="city" required placeholder="City" autocomplete="address-level2" style="flex: 2;">
+                            <select id="state" name="state" required autocomplete="address-level1" style="flex: 1;">
+                                <option value="">State</option>
+                                <option value="AL">AL</option>
+                                <option value="AK">AK</option>
+                                <option value="AZ">AZ</option>
+                                <option value="AR">AR</option>
+                                <option value="CA">CA</option>
+                                <option value="CO">CO</option>
+                                <option value="CT">CT</option>
+                                <option value="DE">DE</option>
+                                <option value="FL">FL</option>
+                                <option value="GA">GA</option>
+                                <option value="HI">HI</option>
+                                <option value="ID">ID</option>
+                                <option value="IL">IL</option>
+                                <option value="IN">IN</option>
+                                <option value="IA">IA</option>
+                                <option value="KS">KS</option>
+                                <option value="KY">KY</option>
+                                <option value="LA">LA</option>
+                                <option value="ME">ME</option>
+                                <option value="MD">MD</option>
+                                <option value="MA">MA</option>
+                                <option value="MI">MI</option>
+                                <option value="MN">MN</option>
+                                <option value="MS">MS</option>
+                                <option value="MO">MO</option>
+                                <option value="MT">MT</option>
+                                <option value="NE">NE</option>
+                                <option value="NV">NV</option>
+                                <option value="NH">NH</option>
+                                <option value="NJ">NJ</option>
+                                <option value="NM">NM</option>
+                                <option value="NY">NY</option>
+                                <option value="NC">NC</option>
+                                <option value="ND">ND</option>
+                                <option value="OH">OH</option>
+                                <option value="OK">OK</option>
+                                <option value="OR">OR</option>
+                                <option value="PA">PA</option>
+                                <option value="RI">RI</option>
+                                <option value="SC">SC</option>
+                                <option value="SD">SD</option>
+                                <option value="TN">TN</option>
+                                <option value="TX">TX</option>
+                                <option value="UT">UT</option>
+                                <option value="VT">VT</option>
+                                <option value="VA">VA</option>
+                                <option value="WA">WA</option>
+                                <option value="WV">WV</option>
+                                <option value="WI">WI</option>
+                                <option value="WY">WY</option>
+                                <option value="DC">DC</option>
+                                <option value="Other">Other (explain in comments)</option>
+                            </select>
+                            <input type="text" id="zip" name="zip" required placeholder="ZIP Code" autocomplete="postal-code" style="flex: 1;">
+                        </div>
+                        <input type="text" id="country" name="country" placeholder="Country (optional)" autocomplete="country-name" style="margin-top: 0.5rem;">
                     </div>
                     
                     <div class="form-group">
@@ -1423,7 +1487,6 @@ Country"></textarea>
                     </div>
                     
                     <p style="text-align: center; color: #666; margin: 1rem 0; font-style: italic;">
-                        Feel free to skip your address and phone number if you are just requesting a precise quote including shipping and taxes.
                     </p>
                     
                     <div class="form-actions">
@@ -2655,7 +2718,11 @@ Country"></textarea>
 
         function updateCartTotals() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const taxRate = 0.1025; // CA sales tax rate 10.25%
+            
+            // Check if state is California for tax calculation
+            const stateSelect = document.getElementById('state');
+            const isCA = stateSelect && stateSelect.value === 'CA';
+            const taxRate = isCA ? 0.1025 : 0; // Only apply tax for CA
             const tax = subtotal * taxRate;
             const total = subtotal + tax;
             
@@ -2663,8 +2730,12 @@ Country"></textarea>
             document.getElementById('cart-tax').textContent = tax.toFixed(2);
             document.getElementById('cart-total-amount').textContent = total.toFixed(2);
             
-            // Update tax label to clarify CA only
-            document.getElementById('tax-label').textContent = 'CA Sales Tax (10.25%):';
+            // Update tax label based on state selection
+            if (isCA) {
+                document.getElementById('tax-label').textContent = 'CA Sales Tax (10.25%):';
+            } else {
+                document.getElementById('tax-label').textContent = 'Sales Tax (10.25%) - only applies to CA customers:';
+            }
         }
 
         function showOrderForm() {
@@ -2689,6 +2760,14 @@ Country"></textarea>
             
             // Set up form submission
             setupOrderForm();
+            
+            // Add event listener to state dropdown to recalculate tax
+            const stateSelect = document.getElementById('state');
+            if (stateSelect) {
+                stateSelect.addEventListener('change', function() {
+                    populateOrderSummary(); // Recalculate totals when state changes
+                });
+            }
         }
 
         function populateOrderSummary() {
@@ -2708,9 +2787,16 @@ Country"></textarea>
             `).join('');
             
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const taxRate = 0.1025;
+            
+            // Check if state is California for tax calculation
+            const stateSelect = document.getElementById('state');
+            const isCA = stateSelect && stateSelect.value === 'CA';
+            const taxRate = isCA ? 0.1025 : 0;
             const tax = subtotal * taxRate;
             const estimatedTotal = subtotal + tax;
+            
+            // Update tax label based on state
+            const taxLabel = isCA ? 'CA Sales Tax (10.25%):' : 'Sales Tax (not applicable):';
             
             const totalsHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -2718,7 +2804,7 @@ Country"></textarea>
                     <span>$${subtotal.toFixed(2)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>CA Sales Tax (10.25%):</span>
+                    <span>${taxLabel}</span>
                     <span>$${tax.toFixed(2)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -2741,11 +2827,28 @@ Country"></textarea>
                 e.preventDefault();
                 
                 const formData = new FormData(form);
+                
+                // Combine address fields
+                const street = formData.get('street');
+                const city = formData.get('city');
+                const state = formData.get('state');
+                const zip = formData.get('zip');
+                const country = formData.get('country');
+                
+                let fullAddress = street;
+                if (city || state || zip) {
+                    fullAddress += '\n' + [city, state, zip].filter(Boolean).join(', ');
+                }
+                if (country) {
+                    fullAddress += '\n' + country;
+                }
+                
                 const customerData = {
                     name: formData.get('name'),
                     email: formData.get('email'),
                     phone: formData.get('phone'),
-                    address: formData.get('address'),
+                    address: fullAddress,
+                    state: formData.get('state'), // Add state for tax calculation
                     payment: formData.get('payment'),
                     notes: formData.get('notes')
                 };
@@ -2776,12 +2879,15 @@ Country"></textarea>
                 }).join('\n');
                 
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const taxRate = 0.1025;
+                
+                // Calculate tax based on selected state
+                const isCA = customerData.state === 'CA';
+                const taxRate = isCA ? 0.1025 : 0;
                 const tax = subtotal * taxRate;
                 const estimatedTotal = subtotal + tax;
                 
-                // Check if Google Forms is configured
-                if (GOOGLE_FORMS_CONFIG.FORM_URL === 'YOUR_GOOGLE_FORM_URL') {
+                // Check if Google Forms is NOT configured
+                if (GOOGLE_FORMS_CONFIG.FORM_URL === 'YOUR_GOOGLE_FORM_URL' || !GOOGLE_FORMS_CONFIG.FORM_URL) {
                     // Fallback to mailto if Google Forms not configured
                     const emailBody = `Hi Mike,
 
@@ -2801,12 +2907,11 @@ ${orderItems}
 
 COST BREAKDOWN:
 Subtotal: $${subtotal.toFixed(2)}
-CA Sales Tax (10.25%): $${tax.toFixed(2)}
+${isCA ? `CA Sales Tax (10.25%): $${tax.toFixed(2)}` : 'Sales Tax: $0.00 (out-of-state)'}
 Shipping: TBD ($11-$40 depending on order size/location)
 Estimated Total (before shipping): $${estimatedTotal.toFixed(2)}
 
-TAX NOTE: CA sales tax (10.25%) shown above applies only to California deliveries. 
-Out-of-state orders are tax-free - deduct $${tax.toFixed(2)} if shipping outside CA.
+${isCA ? 'TAX NOTE: CA sales tax (10.25%) has been applied to this order.' : 'TAX NOTE: No sales tax applied (out-of-state delivery).'}
 
 SHIPPING ACKNOWLEDGMENT:
 ✓ I understand that all plants are shipped bare root
@@ -2847,12 +2952,11 @@ ${orderItems}
 
 COST BREAKDOWN:
 Subtotal: $${subtotal.toFixed(2)}
-CA Sales Tax (10.25%): $${tax.toFixed(2)}
+${isCA ? `CA Sales Tax (10.25%): $${tax.toFixed(2)}` : 'Sales Tax: $0.00 (out-of-state)'}
 Shipping: TBD ($11-$40 depending on order size/location)
 Estimated Total (before shipping): $${estimatedTotal.toFixed(2)}
 
-TAX NOTE: CA sales tax (10.25%) shown above applies only to California deliveries. 
-Out-of-state orders are tax-free - deduct $${tax.toFixed(2)} if shipping outside CA.
+${isCA ? 'TAX NOTE: CA sales tax (10.25%) has been applied to this order.' : 'TAX NOTE: No sales tax applied (out-of-state delivery).'}
 
 SHIPPING ACKNOWLEDGMENT:
 ✓ I understand that all plants are shipped bare root
@@ -2968,17 +3072,17 @@ Mike will receive an automatic notification and will contact you at ${customerDa
 
 Thank you for your order!`);
                         
+                        // Clear cart and return to home after successful submission
+                        cart = [];
+                        localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+                        updateCartIcon();
+                        navigateTo('home');
+                        
                     } catch (error) {
                         console.error('Google Forms submission failed:', error);
                         throw error; // This will trigger the catch block below
                     }
                 }
-                
-                // Clear cart and return to home
-                cart = [];
-                localStorage.setItem('mikeWangCart', JSON.stringify(cart));
-                updateCartIcon();
-                navigateTo('home');
                 
             } catch (error) {
                 console.error('Error submitting order:', error);
@@ -3011,7 +3115,7 @@ Thank you!`;
                 const mailtoLink = `mailto:meizzwang@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
                 
                 window.location.href = mailtoLink;
-                alert('There was an error submitting the order. Opening your email client as backup.');
+                alert('Order submitted via email. Please send the email to complete your order request.');
                 
             } finally {
                 // Reset button state
