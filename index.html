@@ -10,28 +10,6 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     -->
     
-    <!-- Simple Password Protection -->
-    <script>
-        // Check if user is already authenticated this session
-        if (sessionStorage.getItem('mikeAuthToken') !== 'authenticated') {
-            // Show password prompt
-            const password = prompt('🌿 Enter password to access Mike\'s private plant collection:');
-            
-            if (password === 'sarracenia2025') {
-                // Correct password - grant access
-                sessionStorage.setItem('mikeAuthToken', 'authenticated');
-                console.log('Access granted to Mike\'s plant shop!');
-            } else if (password === null) {
-                // User clicked cancel
-                document.write('<div style="font-family: Georgia, serif; text-align: center; padding: 50px; color: #2c3e2d;"><h1>🌿 Mike Wang\'s Sarracenia Collection</h1><p>Access cancelled. <a href="#" onclick="location.reload()">Try again</a></p></div>');
-                throw new Error('Access cancelled');
-            } else {
-                // Wrong password
-                document.write('<div style="font-family: Georgia, serif; text-align: center; padding: 50px; color: #2c3e2d;"><h1>🚫 Access Denied</h1><p>Incorrect password. <a href="#" onclick="location.reload()">Try again</a></p><p style="color: #999; font-size: 0.9rem; margin-top: 20px;">Hint: Think carnivorous plants + current year 😉</p></div>');
-                throw new Error('Authentication failed');
-            }
-        }
-    </script>
     
     <style>
         * {
@@ -1418,8 +1396,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="shipping-address">Shipping Address *</label>
-                        <textarea id="shipping-address" name="address" rows="4" required placeholder="Street Address
+                        <label for="shipping-address">Shipping Address</label>
+                        <textarea id="shipping-address" name="address" rows="4" placeholder="Street Address
 City, State ZIP
 Country"></textarea>
                     </div>
@@ -1443,6 +1421,10 @@ Country"></textarea>
                         <label for="order-notes">Additional Notes</label>
                         <textarea id="order-notes" name="notes" rows="3" placeholder="Special requests, questions, or other payment method details..."></textarea>
                     </div>
+                    
+                    <p style="text-align: center; color: #666; margin: 1rem 0; font-style: italic;">
+                        Feel free to skip your address and phone number if you are just requesting a precise quote including shipping and taxes.
+                    </p>
                     
                     <div class="form-actions">
                         <button type="submit" class="submit-order-btn">Send Order Request</button>
@@ -2223,16 +2205,16 @@ Country"></textarea>
         }
 
         function getCloneNumber(plant) {
-            // Extract clone number from plant name (F1, F2, L15, etc.)
-            const match = plant.name.match(/([A-Z])(\d+)/);
+            // Extract clone number from plant ID (F1, F2, L15, D1, D34, etc.)
+            const match = plant.id.match(/([A-Z]+)(\d+)/);
             if (match) {
                 const letter = match[1];
                 const number = parseInt(match[2]); // parseInt handles F01, F1, F100 correctly
-                // Sort by letter first, then number numerically (F1, F2, F10, F100, then L1, L2, etc.)
+                // Sort by letter first, then number numerically (D1, D2, D34, F1, F2, F10, F100, L1, L2, etc.)
                 return (letter.charCodeAt(0) - 65) * 100000 + number; // Increased multiplier for larger numbers
             }
             // If no clone pattern found, sort alphabetically as fallback
-            return plant.name.charCodeAt(0) * 100000;
+            return plant.id.charCodeAt(0) * 100000;
         }
 
         function getLowestPrice(plant) {
@@ -2495,6 +2477,18 @@ Country"></textarea>
                 'cultivar': '🌸'
             };
             return iconMap[variety] || '🌿';
+        }
+
+        // Helper function to get plant location by ID
+        function getPlantLocation(plantId) {
+            // Search through all categories in plantData
+            for (const category in plantData) {
+                const plant = plantData[category].find(p => p.id === plantId);
+                if (plant) {
+                    return plant.location || '';
+                }
+            }
+            return '';
         }
 
         // Cart functionality
@@ -2775,10 +2769,11 @@ Country"></textarea>
             submitButton.disabled = true;
 
             try {
-                // Create order summary
-                const orderItems = cart.map(item => 
-                    `${item.name} (${item.size}) - Qty: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`
-                ).join('\n');
+                // Create order summary with ID and location
+                const orderItems = cart.map(item => {
+                    const location = getPlantLocation(item.id);
+                    return `[${item.id}] ${item.name}${location ? ` - Location: ${location}` : ''} (${item.size}) - Qty: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`;
+                }).join('\n');
                 
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const taxRate = 0.1025;
@@ -2797,7 +2792,7 @@ Name: ${customerData.name}
 Email: ${customerData.email}
 Phone: ${customerData.phone || 'Not provided'}
 Shipping Address:
-${customerData.address}
+${customerData.address || 'Not provided - shipping quote requested'}
 
 PREFERRED PAYMENT METHOD: ${customerData.payment || 'Not specified'}
 
@@ -2843,7 +2838,7 @@ Name: ${customerData.name}
 Email: ${customerData.email}
 Phone: ${customerData.phone || 'Not provided'}
 Shipping Address:
-${customerData.address}
+${customerData.address || 'Not provided - shipping quote requested'}
 
 PREFERRED PAYMENT METHOD: ${customerData.payment || 'Not specified'}
 
@@ -2888,7 +2883,7 @@ Thank you!`;
                     formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_name, customerData.name);
                     formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_email, customerData.email);
                     formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_phone, customerData.phone || 'Not provided');
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.shipping_address, customerData.address);
+                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.shipping_address, customerData.address || 'Not provided - shipping quote requested');
                     formData.append(GOOGLE_FORMS_CONFIG.FIELDS.preferred_payment, customerData.payment || 'Not specified');
                     formData.append(GOOGLE_FORMS_CONFIG.FIELDS.order_items, orderItems);
                     formData.append(GOOGLE_FORMS_CONFIG.FIELDS.subtotal, subtotal.toFixed(2));
@@ -2998,12 +2993,15 @@ Name: ${customerData.name}
 Email: ${customerData.email}
 Phone: ${customerData.phone || 'Not provided'}
 Shipping Address:
-${customerData.address}
+${customerData.address || 'Not provided - shipping quote requested'}
 
 PREFERRED PAYMENT METHOD: ${customerData.payment || 'Not specified'}
 
 ORDER DETAILS:
-${cart.map(item => `${item.name} (${item.size}) - Qty: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+${cart.map(item => {
+    const location = getPlantLocation(item.id);
+    return `[${item.id}] ${item.name}${location ? ` - Location: ${location}` : ''} (${item.size}) - Qty: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`;
+}).join('\n')}
 
 Please confirm pricing and shipping details.
 
