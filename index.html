@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mike Wang's Sarracenia - Premium Carnivorous Plants</title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Premium carnivorous plants including rare Sarracenia, Venus Flytraps, Cephalotus, and Utricularia. Expert-grown pitcher plants with guaranteed quality. Shop 400+ varieties from Mike Wang's specialized nursery.">
+    <meta name="keywords" content="carnivorous plants, sarracenia, pitcher plants, venus flytrap, buy carnivorous plants online, rare sarracenia, sarracenia flava, sarracenia leucophylla, cephalotus, utricularia, nepenthes, dionaea muscipula, Mike Wang">
+    <meta name="author" content="Mike Wang">
+    <link rel="canonical" href="https://mikesplants.com">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="Mike Wang's Sarracenia - Premium Carnivorous Plants">
+    <meta property="og:description" content="Shop 400+ varieties of expert-grown carnivorous plants including rare Sarracenia, Venus Flytraps, and pitcher plants. Guaranteed quality from Mike Wang's specialized nursery.">
+    <meta property="og:image" content="https://live.staticflickr.com/65535/54195643110_5a8f0e6ba1_b.jpg">
+    <meta property="og:url" content="https://mikesplants.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Mike Wang's Sarracenia">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mike Wang's Sarracenia - Premium Carnivorous Plants">
+    <meta name="twitter:description" content="Shop 400+ varieties of expert-grown carnivorous plants. Rare Sarracenia, Venus Flytraps, and more.">
+    <meta name="twitter:image" content="https://live.staticflickr.com/65535/54195643110_5a8f0e6ba1_b.jpg">
+    
     <!-- Google Analytics (Commented out - replace G-XXXXXXXXXX with real tracking ID) -->
     <!-- 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
@@ -1204,6 +1224,32 @@
             }
         }
     </style>
+    
+    <!-- Organization Schema Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Mike Wang's Sarracenia",
+        "url": "https://mikesplants.com",
+        "logo": "https://live.staticflickr.com/65535/54195643110_5a8f0e6ba1_b.jpg",
+        "description": "Premium carnivorous plant nursery specializing in Sarracenia, Venus Flytraps, Cephalotus, Utricularia and rare varieties. Expert-grown plants with guaranteed quality.",
+        "foundingDate": "2020",
+        "address": {
+            "@type": "PostalAddress",
+            "addressRegion": "CA",
+            "addressCountry": "US"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "sales",
+            "email": "mwang@mikesplants.com"
+        },
+        "sameAs": [
+            "https://www.flickr.com/photos/196202789@N04/"
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- Loading Indicator -->
@@ -3125,7 +3171,18 @@ Thank you!`;
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initializePlantData);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a timeout fallback in case something fails silently
+            setTimeout(function() {
+                const loader = document.getElementById('data-loader');
+                if (loader && loader.style.display !== 'none') {
+                    console.error('Loading timeout - data loader still visible after 10 seconds');
+                    alert('Loading is taking longer than expected. Please check your internet connection and refresh the page.');
+                }
+            }, 10000);
+            
+            initializePlantData();
+        });
 
         // Handle browser back/forward
         window.addEventListener('hashchange', function() {
