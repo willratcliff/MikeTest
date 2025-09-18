@@ -1272,6 +1272,7 @@
         </div>
         <ul>
             <li><a onclick="navigateAndCloseMenu('home')" id="nav-home" class="active">Home</a></li>
+            <li><a onclick="scrollToAboutAndCloseMenu()" id="nav-about">About Us</a></li>
             <li><a onclick="navigateAndCloseMenu('flavas')" id="nav-flavas">Flava</a></li>
             <li><a onclick="navigateAndCloseMenu('leucophyllas')" id="nav-leucophyllas">Leucophylla</a></li>
             <li><a onclick="navigateAndCloseMenu('purpureas')" id="nav-purpureas">Purpurea</a></li>
@@ -2151,6 +2152,20 @@
         function navigateAndCloseMenu(page) {
             closeNavMenu();
             navigateTo(page);
+        }
+
+        // Scroll to About Us section and close menu
+        function scrollToAboutAndCloseMenu() {
+            closeNavMenu();
+            // First navigate to home if not already there
+            navigateTo('home');
+            // Then scroll to about section after a brief delay to ensure home page is loaded
+            setTimeout(() => {
+                const aboutSection = document.querySelector('.about');
+                if (aboutSection) {
+                    aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
         }
 
         // Image Modal Functions
