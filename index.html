@@ -1325,9 +1325,9 @@
                 <p>Premium carnivorous plants from a dedicated hobbyist directly to collectors and enthusiasts</p>
                 <p class="hero-subtitle">Visit our <a href="https://sarracenia.proboards.com/thread/454/mike-wangs-sarracenia-sale" target="_blank" style="color: #7cb342; text-decoration: none;">Sarracenia Forum discussion</a> for detailed photos and information</p>
                 
-                <div class="announcement">
+                <div class="announcement" id="announcement-banner">
                     🌱 WE SHIP ALL YEAR ROUND, ALWAYS OPEN FOR BUSINESS! 🌱<br>
-                    Updated 2025 inventory available • Plants sent bare root • Shipping $12-$40
+                    Updated <span id="inventory-year">2024</span> inventory available • Plants sent bare root • Shipping $12-$40
                 </div>
             </div>
         </div>
@@ -1862,7 +1862,7 @@
             SHEET_ID: '1AYHCuD1PoRHl7zDlQ32ishH_usO3-nTydlUnFP4urI8',
             API_KEY: 'AIzaSyDx_BUUT80GhgoK7PgjyEjX_eRORvFIWbY',
             SHEET_NAME: 'Sheet1',
-            RANGE: 'A:P'
+            RANGE: 'A:Q'
         };
 
         // Google Forms Configuration
@@ -2005,6 +2005,28 @@
             }
         }
 
+        // Extract inventory year from Q2 cell
+        function getInventoryYear(sheetsData) {
+            try {
+                if (sheetsData.values && sheetsData.values.length >= 2) {
+                    const secondRow = sheetsData.values[1]; // Row 2 (0-indexed)
+                    const qColumnIndex = 16; // Column Q (0-indexed: A=0, B=1, ..., Q=16)
+                    
+                    if (secondRow && secondRow[qColumnIndex]) {
+                        const year = parseInt(secondRow[qColumnIndex]);
+                        if (!isNaN(year) && year > 1900 && year < 2100) {
+                            return year;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('Error extracting inventory year from Q2:', error);
+            }
+            
+            // Fallback to current year
+            return new Date().getFullYear();
+        }
+
         // Convert Google Sheets data to plant data format
         function convertSheetsDataToPlantData(sheetsData) {
             if (!sheetsData.values || sheetsData.values.length < 2) {
@@ -2086,6 +2108,11 @@
                 
                 const sheetsData = await fetchPlantData();
                 plantData = convertSheetsDataToPlantData(sheetsData);
+                
+                // Update inventory year from Q2 cell
+                const inventoryYear = getInventoryYear(sheetsData);
+                updateInventoryYear(inventoryYear);
+                
                 isDataLoaded = true;
                 
                 hideLoadingIndicator();
@@ -2100,6 +2127,10 @@
             } catch (error) {
                 console.error('Failed to load plant data:', error);
                 hideLoadingIndicator();
+                
+                // Still update inventory year with fallback to current year
+                updateInventoryYear(new Date().getFullYear());
+                
                 alert('Failed to load plant data from Google Sheets. Please refresh the page to try again.');
             }
         }
@@ -2726,6 +2757,14 @@
                 flavaWarning.style.display = 'none';
                 flavaCheckbox.required = false;
                 flavaCheckbox.checked = false; // Clear the checkbox if not needed
+            }
+        }
+
+        // Update inventory year in announcement banner
+        function updateInventoryYear(year) {
+            const inventoryYearElement = document.getElementById('inventory-year');
+            if (inventoryYearElement) {
+                inventoryYearElement.textContent = year;
             }
         }
 
