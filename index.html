@@ -1403,6 +1403,14 @@
                                 Plants will arrive without soil and may appear dormant or stressed. This is normal for bare root shipping and plants will recover with proper care.
                             </label>
                         </div>
+                        
+                        <div class="acknowledgment-checkbox" id="flava-dormancy-warning" style="display: none;">
+                            <input type="checkbox" id="flava-dormancy-checkbox" required>
+                            <label for="flava-dormancy-checkbox" class="acknowledgment-text">
+                                <strong>I understand the seasonal dormancy process for Sarracenia flava.</strong><br>
+                                The tips of the pitchers of Sarracenia flava and some of their hybrids may rapidly turn brown days after you receive them starting around mid to late July. They can sometimes be brown all the way to the ground starting around October. This is completely normal and a part of their dormancy process.
+                            </label>
+                        </div>
                     </div>
                     
                     
@@ -2636,6 +2644,7 @@
             
             localStorage.setItem('mikeWangCart', JSON.stringify(cart));
             updateCartIcon();
+            updateFlavaWarningVisibility();
             showCartNotification(plantName);
         }
 
@@ -2643,6 +2652,7 @@
             cart = cart.filter(item => !(item.id === plantId && item.sizeIndex === sizeIndex));
             localStorage.setItem('mikeWangCart', JSON.stringify(cart));
             updateCartIcon();
+            updateFlavaWarningVisibility();
             if (currentPage === 'cart') {
                 showCart();
             }
@@ -2660,6 +2670,7 @@
                     cart[itemIndex].quantity = newQuantity;
                     localStorage.setItem('mikeWangCart', JSON.stringify(cart));
                     updateCartIcon();
+                    updateFlavaWarningVisibility();
                     if (currentPage === 'cart') {
                         showCart();
                     }
@@ -2676,6 +2687,45 @@
                 cartCount.style.display = 'block';
             } else {
                 cartCount.style.display = 'none';
+            }
+        }
+
+        // Check if cart contains flava plants or hybrids
+        function hasFlavaInCart() {
+            return cart.some(item => {
+                const itemCategory = item.category ? item.category.toLowerCase() : '';
+                const itemName = item.name ? item.name.toLowerCase() : '';
+                
+                // Check if it's in the flavas category or if the name contains "flava"
+                return itemCategory === 'flavas' || 
+                       itemName.includes('flava') ||
+                       itemName.includes('moorei') || // Moore's is a flava hybrid
+                       (itemCategory === 'hybrids' && itemName.includes('flava'));
+            });
+        }
+
+        // Check if current date is in the July 1 - October 31 range
+        function isFlavaSeasonalWarningPeriod() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const startDate = new Date(currentYear, 6, 1); // July 1 (month is 0-indexed)
+            const endDate = new Date(currentYear, 10, 31); // October 31
+            
+            return now >= startDate && now <= endDate;
+        }
+
+        // Update visibility of flava dormancy warning
+        function updateFlavaWarningVisibility() {
+            const flavaWarning = document.getElementById('flava-dormancy-warning');
+            const flavaCheckbox = document.getElementById('flava-dormancy-checkbox');
+            
+            if (hasFlavaInCart() && isFlavaSeasonalWarningPeriod()) {
+                flavaWarning.style.display = 'block';
+                flavaCheckbox.required = true;
+            } else {
+                flavaWarning.style.display = 'none';
+                flavaCheckbox.required = false;
+                flavaCheckbox.checked = false; // Clear the checkbox if not needed
             }
         }
 
@@ -2730,11 +2780,13 @@
                 cartItemsContainer.innerHTML = '';
                 cartEmpty.style.display = 'block';
                 cartSummary.style.display = 'none';
+                updateFlavaWarningVisibility();
                 return;
             }
             
             cartEmpty.style.display = 'none';
             cartSummary.style.display = 'block';
+            updateFlavaWarningVisibility();
             
             const cartHTML = cart.map(item => `
                 <div class="cart-item">
@@ -2804,6 +2856,13 @@
             const bareRootCheckbox = document.getElementById('bare-root-checkbox');
             if (!bareRootCheckbox || !bareRootCheckbox.checked) {
                 alert('Please acknowledge that you understand all plants are shipped bare root before proceeding.');
+                return;
+            }
+            
+            // Check if flava dormancy checkbox is required and checked
+            const flavaCheckbox = document.getElementById('flava-dormancy-checkbox');
+            if (flavaCheckbox && flavaCheckbox.required && !flavaCheckbox.checked) {
+                alert('Please acknowledge that you understand the seasonal dormancy process for Sarracenia flava before proceeding.');
                 return;
             }
 
@@ -2978,6 +3037,7 @@ SHIPPING ACKNOWLEDGMENT:
 ✓ I understand that all plants are shipped bare root
 ✓ I understand that plants may appear dormant/stressed upon arrival
 ✓ I understand this is normal for bare root shipping
+${hasFlavaInCart() && isFlavaSeasonalWarningPeriod() ? '✓ I understand the seasonal dormancy process for Sarracenia flava (pitcher browning July-October)' : ''}
 
 ${customerData.notes ? `ADDITIONAL NOTES:\n${customerData.notes}\n\n` : ''}Please confirm the final shipping cost and provide payment details.
 
@@ -3023,6 +3083,7 @@ SHIPPING ACKNOWLEDGMENT:
 ✓ I understand that all plants are shipped bare root
 ✓ I understand that plants may appear dormant/stressed upon arrival
 ✓ I understand this is normal for bare root shipping
+${hasFlavaInCart() && isFlavaSeasonalWarningPeriod() ? '✓ I understand the seasonal dormancy process for Sarracenia flava (pitcher browning July-October)' : ''}
 
 ${customerData.notes ? `ADDITIONAL NOTES:\n${customerData.notes}\n\n` : ''}Please confirm the final shipping cost and provide payment details.
 
