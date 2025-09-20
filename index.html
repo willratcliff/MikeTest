@@ -3136,93 +3136,38 @@ Thank you!`;
                     }
                     
                     // Submit to Google Forms
-                    const formData = new FormData();
-                    
                     console.log('Submitting to Google Forms with data:', {
                         name: customerData.name,
                         email: customerData.email,
                         formUrl: GOOGLE_FORMS_CONFIG.FORM_URL
                     });
                     
-                    // Add all form fields
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_name, customerData.name);
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_email, customerData.email);
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_phone, customerData.phone || 'Not provided');
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.shipping_address, customerData.address || 'Not provided - shipping quote requested');
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.preferred_payment, customerData.payment || 'Not specified');
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.order_items, orderItems);
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.subtotal, subtotal.toFixed(2));
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.tax_amount, tax.toFixed(2));
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.estimated_total, estimatedTotal.toFixed(2));
-                    formData.append(GOOGLE_FORMS_CONFIG.FIELDS.additional_notes, customerData.notes || 'None');
-                    
-                    // Try iframe submission method (more reliable for Google Forms)
+                    // Try fetch method first (Chrome-compatible)
                     try {
-                        // Create a hidden iframe for form submission
-                        const iframe = document.createElement('iframe');
-                        iframe.style.display = 'none';
-                        iframe.name = 'hidden_iframe';
-                        document.body.appendChild(iframe);
+                        console.log('Attempting fetch method for Google Forms submission');
                         
-                        // Create a temporary form
-                        const tempForm = document.createElement('form');
-                        tempForm.method = 'POST';
-                        tempForm.action = GOOGLE_FORMS_CONFIG.FORM_URL;
-                        tempForm.target = 'hidden_iframe';
+                        const formData = new FormData();
                         
-                        // Add all fields as hidden inputs
-                        Object.keys(GOOGLE_FORMS_CONFIG.FIELDS).forEach(key => {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = GOOGLE_FORMS_CONFIG.FIELDS[key];
-                            
-                            switch(key) {
-                                case 'customer_name':
-                                    input.value = customerData.name || '';
-                                    break;
-                                case 'customer_email':
-                                    input.value = customerData.email || '';
-                                    break;
-                                case 'customer_phone':
-                                    input.value = customerData.phone || 'Not provided';
-                                    break;
-                                case 'shipping_address':
-                                    input.value = customerData.address || '';
-                                    break;
-                                case 'preferred_payment':
-                                    input.value = customerData.payment || 'Not specified';
-                                    break;
-                                case 'order_items':
-                                    input.value = orderItems;
-                                    break;
-                                case 'subtotal':
-                                    input.value = subtotal.toFixed(2);
-                                    break;
-                                case 'tax_amount':
-                                    input.value = tax.toFixed(2);
-                                    break;
-                                case 'estimated_total':
-                                    input.value = estimatedTotal.toFixed(2);
-                                    break;
-                                case 'additional_notes':
-                                    input.value = customerData.notes || 'None';
-                                    break;
-                            }
-                            tempForm.appendChild(input);
+                        // Add all form fields to FormData
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_name, customerData.name || '');
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_email, customerData.email || '');
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.customer_phone, customerData.phone || 'Not provided');
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.shipping_address, customerData.address || '');
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.preferred_payment, customerData.payment || 'Not specified');
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.order_items, orderItems);
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.subtotal, subtotal.toFixed(2));
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.tax_amount, tax.toFixed(2));
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.estimated_total, estimatedTotal.toFixed(2));
+                        formData.append(GOOGLE_FORMS_CONFIG.FIELDS.additional_notes, customerData.notes || 'None');
+                        
+                        // Submit via fetch with no-cors mode (required for Google Forms)
+                        await fetch(GOOGLE_FORMS_CONFIG.FORM_URL, {
+                            method: 'POST',
+                            body: formData,
+                            mode: 'no-cors' // Required for cross-origin Google Forms submission
                         });
                         
-                        document.body.appendChild(tempForm);
-                        
-                        console.log('Submitting to Google Forms via iframe method');
-                        tempForm.submit();
-                        
-                        // Clean up after submission
-                        setTimeout(() => {
-                            document.body.removeChild(tempForm);
-                            document.body.removeChild(iframe);
-                        }, 1000);
-                        
-                        console.log('Google Forms submission completed via iframe');
+                        console.log('Google Forms submission completed via fetch method');
                         
                         // Show success message
                         alert(`Order request submitted successfully! 
@@ -3239,9 +3184,100 @@ Thank you for your order!`);
                         updateCartIcon();
                         navigateTo('home');
                         
-                    } catch (error) {
-                        console.error('Google Forms submission failed:', error);
-                        throw error; // This will trigger the catch block below
+                    } catch (fetchError) {
+                        console.warn('Fetch method failed, trying iframe fallback:', fetchError);
+                        
+                        // Fallback to iframe method for older browsers
+                        try {
+                            console.log('Attempting iframe fallback method');
+                            
+                            // Create a hidden iframe for form submission
+                            const iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            iframe.name = 'hidden_iframe_fallback';
+                            document.body.appendChild(iframe);
+                            
+                            // Create a temporary form
+                            const tempForm = document.createElement('form');
+                            tempForm.method = 'POST';
+                            tempForm.action = GOOGLE_FORMS_CONFIG.FORM_URL;
+                            tempForm.target = 'hidden_iframe_fallback';
+                            
+                            // Add all fields as hidden inputs
+                            Object.keys(GOOGLE_FORMS_CONFIG.FIELDS).forEach(key => {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = GOOGLE_FORMS_CONFIG.FIELDS[key];
+                                
+                                switch(key) {
+                                    case 'customer_name':
+                                        input.value = customerData.name || '';
+                                        break;
+                                    case 'customer_email':
+                                        input.value = customerData.email || '';
+                                        break;
+                                    case 'customer_phone':
+                                        input.value = customerData.phone || 'Not provided';
+                                        break;
+                                    case 'shipping_address':
+                                        input.value = customerData.address || '';
+                                        break;
+                                    case 'preferred_payment':
+                                        input.value = customerData.payment || 'Not specified';
+                                        break;
+                                    case 'order_items':
+                                        input.value = orderItems;
+                                        break;
+                                    case 'subtotal':
+                                        input.value = subtotal.toFixed(2);
+                                        break;
+                                    case 'tax_amount':
+                                        input.value = tax.toFixed(2);
+                                        break;
+                                    case 'estimated_total':
+                                        input.value = estimatedTotal.toFixed(2);
+                                        break;
+                                    case 'additional_notes':
+                                        input.value = customerData.notes || 'None';
+                                        break;
+                                }
+                                tempForm.appendChild(input);
+                            });
+                            
+                            document.body.appendChild(tempForm);
+                            tempForm.submit();
+                            
+                            // Clean up after submission
+                            setTimeout(() => {
+                                if (document.body.contains(tempForm)) {
+                                    document.body.removeChild(tempForm);
+                                }
+                                if (document.body.contains(iframe)) {
+                                    document.body.removeChild(iframe);
+                                }
+                            }, 2000);
+                            
+                            console.log('Google Forms submission completed via iframe fallback');
+                            
+                            // Show success message
+                            alert(`Order request submitted successfully! 
+
+Your order for $${estimatedTotal.toFixed(2)} (before shipping) has been sent to Mike.
+
+Mike will receive an automatic notification and will contact you at ${customerData.email} with shipping details and payment instructions.
+
+Thank you for your order!`);
+                            
+                            // Clear cart and return to home after successful submission
+                            cart = [];
+                            localStorage.setItem('mikeWangCart', JSON.stringify(cart));
+                            updateCartIcon();
+                            navigateTo('home');
+                            
+                        } catch (iframeError) {
+                            console.error('Both fetch and iframe methods failed:', iframeError);
+                            throw iframeError; // This will trigger the outer catch block
+                        }
                     }
                 }
                 
