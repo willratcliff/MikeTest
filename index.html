@@ -3323,6 +3323,9 @@ Thank you!`;
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Automatically update inventory year
+            document.getElementById('inventory-year').textContent = new Date().getFullYear();
+
             // Add a timeout fallback in case something fails silently
             setTimeout(function() {
                 const loader = document.getElementById('data-loader');
