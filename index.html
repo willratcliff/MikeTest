@@ -2007,23 +2007,7 @@
 
         // Extract inventory year from Q2 cell
         function getInventoryYear(sheetsData) {
-            try {
-                if (sheetsData.values && sheetsData.values.length >= 2) {
-                    const secondRow = sheetsData.values[1]; // Row 2 (0-indexed)
-                    const qColumnIndex = 16; // Column Q (0-indexed: A=0, B=1, ..., Q=16)
-                    
-                    if (secondRow && secondRow[qColumnIndex]) {
-                        const year = parseInt(secondRow[qColumnIndex]);
-                        if (!isNaN(year) && year > 1900 && year < 2100) {
-                            return year;
-                        }
-                    }
-                }
-            } catch (error) {
-                console.warn('Error extracting inventory year from Q2:', error);
-            }
-            
-            // Fallback to current year
+            // Always return current year (automatic year updates)
             return new Date().getFullYear();
         }
 
