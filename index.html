@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T7SC7ZCR');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mike Wang's Sarracenia - Premium Carnivorous Plants</title>
@@ -1252,6 +1260,11 @@
     </script>
 </head>
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T7SC7ZCR"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <!-- Loading Indicator -->
     <div id="data-loader" class="loader-overlay">
         <div class="loader-content">
@@ -2251,6 +2264,14 @@
             window.location.hash = page;
             currentPage = page;
 
+            // Track category navigation
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'view_category',
+                'category_name': page,
+                'page_type': page === 'home' ? 'home' : (page === 'cart' ? 'cart' : 'category')
+            });
+
             if (page === 'home') {
                 loadHomePage();
             } else if (page !== 'cart') {
@@ -2302,8 +2323,19 @@
             }
 
             // Update results count
-            document.getElementById(`${category}-count`).textContent = 
+            document.getElementById(`${category}-count`).textContent =
                 `${filteredData.length} of ${originalData.length} plants`;
+
+            // Track search event (only if there's a search term)
+            if (searchTerm && searchTerm.length > 0) {
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'search',
+                    'search_term': searchTerm,
+                    'search_category': category,
+                    'search_results_count': filteredData.length
+                });
+            }
 
             // Render filtered results
             renderPlantGrid(category, filteredData);
@@ -2430,6 +2462,17 @@
                         
                         console.log('Adding to cart:', {plantId, plantName, size, price, sizeIndex});
                         addToCart(plantId, plantName, size, price, sizeIndex);
+
+                        // Track add to cart event
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            'event': 'add_to_cart',
+                            'plant_id': plantId,
+                            'plant_name': plantName,
+                            'size': size,
+                            'price': price,
+                            'value': price
+                        });
                     } catch (error) {
                         console.error('Error adding to cart:', error);
                         alert('Error adding item to cart. Please try again.');
@@ -2537,6 +2580,17 @@
                         
                         console.log('Adding to cart:', {plantId, plantName, size, price, sizeIndex});
                         addToCart(plantId, plantName, size, price, sizeIndex);
+
+                        // Track add to cart event
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            'event': 'add_to_cart',
+                            'plant_id': plantId,
+                            'plant_name': plantName,
+                            'size': size,
+                            'price': price,
+                            'value': price
+                        });
                     } catch (error) {
                         console.error('Error adding to cart:', error);
                         alert('Error adding item to cart. Please try again.');
@@ -2574,8 +2628,8 @@
                 `<span style="font-size: 4rem; color: white;">${getPlantIcon(plant.variety)}</span>`;
 
             return `
-                <div class="plant-card">
-                    <div class="plant-image ${plant.image ? '' : 'placeholder'}" ${plant.image ? `onclick="openImageModal('${plant.image}', '${plant.name.replace(/'/g, '\\\'')}')" style="cursor: pointer;" title="Click to view full size"` : ''}>
+                <div class="plant-card" onclick="trackPlantView('${plant.id}', '${plant.name.replace(/'/g, '\\\'').replace(/"/g, '&quot;')}', '${plant.variety}', '${plant.prices[0]?.price || 0}')">
+                    <div class="plant-image ${plant.image ? '' : 'placeholder'}" ${plant.image ? `onclick="event.stopPropagation(); openImageModal('${plant.image}', '${plant.name.replace(/'/g, '\\\'')}')" style="cursor: pointer;" title="Click to view full size"` : ''}>
                         ${imageHTML}
                         <div class="status-badge status-${plant.status}">${plant.status.replace('-', ' ')}</div>
                     </div>
@@ -2624,6 +2678,18 @@
                 'cultivar': '🌸'
             };
             return iconMap[variety] || '🌿';
+        }
+
+        // Track plant view event
+        function trackPlantView(plantId, plantName, variety, price) {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'view_plant',
+                'plant_id': plantId,
+                'plant_name': plantName,
+                'plant_category': variety,
+                'plant_price': price
+            });
         }
 
         // Helper function to get plant location by ID
