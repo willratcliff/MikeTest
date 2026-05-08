@@ -1232,7 +1232,7 @@
             }
         }
     </style>
-    
+
     <!-- Organization Schema Structured Data -->
     <script type="application/ld+json">
     {
@@ -1258,6 +1258,12 @@
         ]
     }
     </script>
+
+    <!-- wiki-link.js: augments each plant card with a "Read about this clone"
+         link to the corresponding entry on wiki.mikesplants.com. Links are
+         resolved via wiki-overrides.json (manual map) + algorithmic match
+         against wiki-lookup.json published by the wiki. -->
+    <script src="wiki-link.js" defer></script>
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
