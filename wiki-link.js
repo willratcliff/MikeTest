@@ -147,18 +147,17 @@
   // ---- match resolution ---------------------------------------------------
 
   function resolveWikiUrl(plant, data) {
-    // 1) Manual override wins.
+    // Only manual overrides produce links. Algorithmic matching is
+    // disabled because it produced too many false positives across
+    // similar-sounding cultivars (e.g. 'Hidden Beauty' → leuco Sumter,
+    // 'tall, vigorous' → leuco RED Breeder Clone Franklin).
+    // For listings absent from wiki-overrides.json, no link is shown.
     if (plant.id && Object.prototype.hasOwnProperty.call(data.overrides, plant.id)) {
       const v = data.overrides[plant.id];
       if (v === false || v == null || v === "") return null;
       return WIKI_BASE + "/" + String(v).replace(/^\/+/, "").replace(/\/+$/, "") + "/";
     }
-    // 2) Algorithmic match.
-    const parsed = parseName(plant.name || "");
-    const result = findMatch(parsed, plant.location || "", data.lookup);
-    if (!result || !result.match) return null;
-    if (result.confidence === "low" || result.confidence === "none") return null;
-    return WIKI_BASE + "/" + result.match.id.replace(/^\/+/, "").replace(/\/+$/, "") + "/";
+    return null;
   }
 
   // ---- matcher (mirrors scripts/match_inventory.py) -----------------------
